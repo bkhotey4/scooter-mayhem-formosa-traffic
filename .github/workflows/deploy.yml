@@ -28,13 +28,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
-          cache-dependency-path: 'web-prototype/package.json'
 
-      - name: Install Web Prototype Dependencies
+      - name: Install Dependencies
         run: |
           cd web-prototype
-          npm ci || npm install
+          npm install
 
       - name: Build Web Prototype
         run: |
