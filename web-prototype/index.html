@@ -648,6 +648,42 @@
       </div>
     </div>
   </div>
+
+  <!-- Exit / Quit Modal -->
+  <div id="exit-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="exit-modal-title">
+    <div class="modal-box exit-box">
+      <div class="retro-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.5);">ENGINE OFF · 安全熄火</div>
+      <h2 id="exit-modal-title" style="color: #fff; margin: 12px 0 6px; font-size: 26px;">🛵 感謝遊玩！準備離開遊戲</h2>
+      <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 18px;">《極限機車：寶島交通》感謝您的體驗，今日的行車里程與探索進度已妥善保存！</p>
+      
+      <div class="exit-info-card">
+        <div class="exit-card-title">🔒 瀏覽器安全防護提示</div>
+        <p class="exit-card-desc">
+          現代網頁瀏覽器（Chrome、Edge 等）因安全性防護限制，<strong>禁止網頁程式直接強制關閉分頁標籤</strong>。
+        </p>
+        <div class="exit-shortcut-box">
+          <span>👉 請直接點擊瀏覽器分頁的 <strong>✕</strong> 或按快速鍵關閉：</span>
+          <kbd class="kbd-badge">Ctrl + W</kbd>
+          <span class="kbd-alt">(Mac: <kbd class="kbd-badge">⌘ + W</kbd>)</span>
+        </div>
+      </div>
+
+      <div class="exit-actions">
+        <button id="btn-exit-try-close" class="return-menu-button btn-quit-danger" type="button">
+          🚪 嘗試關閉分頁 (Close Tab)
+        </button>
+        <button id="btn-exit-cancel" class="btn-primary-start" type="button" style="background: linear-gradient(135deg, #0ea5e9, #2563eb); margin-top: 4px;">
+          🔄 返回遊戲 (繼續騎車)
+        </button>
+        <a id="btn-exit-github" href="https://github.com/bkhotey4/scooter-mayhem-formosa-traffic" target="_blank" rel="noopener" class="return-menu-button" style="text-decoration: none; text-align: center; justify-content: center; font-size: 13px; color: #94a3b8; margin-top: 4px;">
+          ⭐ 前往 GitHub 專案庫 (查看更新與開源原始碼)
+        </a>
+      </div>
+      <div id="exit-close-tip" class="exit-close-tip" style="display: none;">
+        ⚠️ 瀏覽器已安全攔截自動關閉，請直接按鍵盤 <kbd>Ctrl+W</kbd> 或點擊分頁上方 ✕ 離開！
+      </div>
+    </div>
+  </div>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

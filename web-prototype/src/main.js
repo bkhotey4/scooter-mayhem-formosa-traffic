@@ -101,6 +101,10 @@ class GameApp {
       btnGameoverQuit: document.getElementById('btn-gameover-quit'),
       btnStartQuit: document.getElementById('btn-start-quit'),
       btnStartQuit2: document.getElementById('btn-start-quit-2'),
+      modalExit: document.getElementById('exit-modal'),
+      btnExitTryClose: document.getElementById('btn-exit-try-close'),
+      btnExitCancel: document.getElementById('btn-exit-cancel'),
+      exitCloseTip: document.getElementById('exit-close-tip'),
       visorOverlay: document.getElementById('visor-overlay'),
       speedlinesOverlay: document.getElementById('speedlines-overlay'),
       wiperArm: document.getElementById('wiper-arm'),
@@ -409,6 +413,18 @@ class GameApp {
     this.ui.btnStartQuit?.addEventListener('click', () => this.quitGame());
     this.ui.btnStartQuit2?.addEventListener('click', () => this.quitGame());
 
+    this.ui.btnExitCancel?.addEventListener('click', () => {
+      this.sound?.playTone?.(350, 0.1, 'sine', 0.2);
+      if (this.ui.modalExit) this.ui.modalExit.classList.add('hidden');
+    });
+
+    this.ui.btnExitTryClose?.addEventListener('click', () => {
+      try {
+        window.close();
+      } catch (_) {}
+      if (this.ui.exitCloseTip) this.ui.exitCloseTip.style.display = 'block';
+    });
+
     // 2-Step Split Screen Navigation for Start Screen
     const startPage1 = document.getElementById('start-page-1');
     const startPage2 = document.getElementById('start-page-2');
@@ -593,6 +609,14 @@ class GameApp {
         if (e.key === 'Escape') { e.preventDefault(); this.worldMap.close(); }
         return;
       }
+      if (e.key === 'Escape') {
+        if (this.ui.modalExit && !this.ui.modalExit.classList.contains('hidden')) {
+          e.preventDefault();
+          this.sound?.playTone?.(350, 0.1, 'sine', 0.2);
+          this.ui.modalExit.classList.add('hidden');
+          return;
+        }
+      }
       if (e.key === 'Escape' && this.running) {
         e.preventDefault();
         if (this.gameMode?.state === 'GAME_OVER' || this.gameMode?.state === 'SUMMARY') return;
@@ -706,11 +730,14 @@ class GameApp {
   }
 
   quitGame() {
-    this.returnToMainMenu();
-    this.showComboPopup('🛵 感謝遊玩！若想結束，請直接關閉瀏覽器分頁。', 4500);
+    this.sound?.playTone?.(180, 0.25, 'triangle', 0.25);
     try {
       window.close();
     } catch (_) {}
+    if (this.ui.modalExit) {
+      this.ui.modalExit.classList.remove('hidden');
+      if (this.ui.exitCloseTip) this.ui.exitCloseTip.style.display = 'none';
+    }
   }
 
   toggleCamera() {

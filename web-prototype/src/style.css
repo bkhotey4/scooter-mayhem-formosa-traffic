@@ -2566,3 +2566,105 @@ body.touch-enabled .touch-controls,
 @media(max-width:650px) { #world-map { padding:14px; } .world-map-body { grid-template-columns:1fr; gap:8px; } .world-map-body canvas { max-height:52dvh; } #exploration-list { display:grid; grid-template-columns:1fr 1fr; font-size:13px; } }
 
 @media(max-width:640px) { #btn-world-map { top:205px; right:80px; padding:6px; font-size:10px; } }
+
+/* ==========================================================================
+   Exit / Quit Modal Styles
+   ========================================================================== */
+#exit-modal {
+  z-index: 10050 !important;
+}
+
+.exit-box {
+  max-width: 520px;
+  width: 90vw;
+  background: rgba(13, 22, 34, 0.96) !important;
+  border: 2px solid rgba(239, 68, 68, 0.65) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(239, 68, 68, 0.25) !important;
+  backdrop-filter: blur(16px) !important;
+  padding: 28px 24px !important;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.exit-info-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.exit-card-title {
+  font-weight: 700;
+  color: #fbbf24;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.exit-card-desc {
+  color: #94a3b8;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+
+.exit-shortcut-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #e2e8f0;
+  font-size: 13.5px;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kbd-badge {
+  background: #334155;
+  color: #38bdf8;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-family: monospace;
+  border: 1px solid #475569;
+  box-shadow: 0 2px 0 #1e293b;
+}
+
+.kbd-alt {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.exit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exit-actions .return-menu-button {
+  font-size: 15px;
+  padding: 12px 18px;
+  margin: 0;
+}
+
+.exit-actions .btn-primary-start {
+  font-size: 15px;
+  padding: 12px 18px;
+  margin: 0;
+}
+
+.exit-close-tip {
+  color: #fca5a5;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.18);
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  line-height: 1.4;
+}
