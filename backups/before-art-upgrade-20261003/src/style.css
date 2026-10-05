@@ -1,0 +1,1105 @@
+/* style.css - Taiwanese Arcade & Cyberpunk Street Aesthetic */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #0b0d13;
+  font-family: 'Noto Sans TC', sans-serif;
+  color: #ffffff;
+}
+
+#canvas-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Visor Screen Droplets & Wiper Effect */
+.visor-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(circle, rgba(129, 212, 250, 0.15) 0%, rgba(3, 169, 244, 0.05) 70%, transparent 100%);
+}
+
+.visor-overlay.active {
+  opacity: 1;
+}
+
+.wiper-arm {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 6px;
+  height: 60%;
+  background: #ffffff;
+  transform-origin: bottom center;
+  transform: rotate(-60deg);
+  opacity: 0;
+}
+
+.wiper-arm.wiping {
+  opacity: 0.8;
+  animation: wipeAction 0.6s ease-in-out;
+}
+
+@keyframes wipeAction {
+  0% { transform: rotate(-60deg); }
+  50% { transform: rotate(60deg); }
+  100% { transform: rotate(-60deg); }
+}
+
+/* HUD Overlay */
+#hud-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+/* Card Style */
+.hud-card {
+  background: rgba(16, 20, 28, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  padding: 12px 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+}
+
+.card-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #90caf9;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.mission-card {
+  flex: 1;
+  max-width: 380px;
+  border-left: 6px solid #00e5ff;
+}
+
+.target-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.target-sub {
+  font-size: 13px;
+  color: #bbb;
+  margin-top: 2px;
+}
+
+.highlight-cyan {
+  color: #00e5ff;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.timer-card {
+  text-align: center;
+  min-width: 130px;
+  border-top: 4px solid #ff1744;
+}
+
+.timer-display {
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 38px;
+  color: #00e676;
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(0, 230, 118, 0.6);
+}
+
+.timer-card.danger .timer-display {
+  color: #ff1744;
+  animation: pulseTimer 0.6s infinite alternate;
+}
+
+@keyframes pulseTimer {
+  0% { transform: scale(1); text-shadow: 0 0 10px #ff1744; }
+  100% { transform: scale(1.1); text-shadow: 0 0 25px #ff1744; }
+}
+
+.score-card {
+  text-align: right;
+  min-width: 160px;
+  border-right: 6px solid #ffd600;
+}
+
+.earnings-val {
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 26px;
+  color: #ffd600;
+}
+
+.score-val {
+  font-size: 12px;
+  font-weight: 700;
+  color: #aaa;
+}
+
+/* Bottom Left: Boba Tea Physics Monitor */
+.bottom-left {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+}
+
+.boba-monitor-card {
+  border-left: 6px solid #ff9100;
+  padding: 14px;
+  background: rgba(14, 18, 26, 0.92);
+}
+
+.monitor-header {
+  font-size: 12px;
+  font-weight: 900;
+  color: #ffb74d;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff9100;
+  box-shadow: 0 0 8px #ff9100;
+  animation: pulseDot 1s infinite alternate;
+}
+
+@keyframes pulseDot {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; transform: scale(1.3); }
+}
+
+.boba-visual-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#boba-canvas {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.boba-stats-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 170px;
+}
+
+.stat-group .stat-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  color: #ccc;
+}
+
+.stat-num {
+  font-weight: 900;
+  color: #fff;
+}
+
+.meter-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.meter-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.15s ease-out;
+}
+
+.liquid-fill {
+  background: linear-gradient(90deg, #ffb300, #ff6d00);
+  box-shadow: 0 0 8px rgba(255, 109, 0, 0.5);
+}
+
+.seal-fill {
+  background: linear-gradient(90deg, #00e676, #00b0ff);
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
+}
+
+.boba-alert-badge {
+  font-size: 11px;
+  font-weight: 900;
+  text-align: center;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: rgba(0, 230, 118, 0.2);
+  color: #00e676;
+  border: 1px solid #00e676;
+}
+
+.boba-alert-badge.danger {
+  background: rgba(255, 23, 68, 0.3);
+  color: #ff1744;
+  border-color: #ff1744;
+  animation: shakeAlert 0.4s infinite;
+}
+
+@keyframes shakeAlert {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+
+/* Bottom Right: Speedometer & Controls */
+.bottom-right {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.gutter-badge {
+  font-size: 13px;
+  font-weight: 900;
+  background: #ffd600;
+  color: #000;
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 0 16px rgba(255, 214, 0, 0.8);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+}
+
+.gutter-badge.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.speedo-card {
+  text-align: right;
+  border-right: 6px solid #00e5ff;
+  min-width: 180px;
+}
+
+.speedo-val {
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 48px;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.speed-unit {
+  font-size: 18px;
+  color: #00e5ff;
+}
+
+.speedo-sub {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.quick-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.hud-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.15s ease;
+}
+
+.hud-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.btn-horn {
+  background: #e65100;
+  border-color: #ff9800;
+  color: #fff;
+  font-weight: 900;
+}
+
+.btn-horn:hover {
+  background: #ff5722;
+}
+
+/* Keybind Pill */
+.keybind-pill {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #ddd;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.keybind-pill b {
+  color: #00e5ff;
+}
+
+/* Combo Popup Area */
+.combo-container {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.combo-badge {
+  background: linear-gradient(135deg, #ff1744, #ff9100);
+  border: 3px solid #ffffff;
+  border-radius: 30px;
+  padding: 10px 24px;
+  font-size: 24px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 30px rgba(255, 23, 68, 0.8);
+  animation: popCombo 1.2s forwards cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes popCombo {
+  0% { transform: scale(0.4) translateY(30px); opacity: 0; }
+  25% { transform: scale(1.15) translateY(0); opacity: 1; }
+  80% { transform: scale(1) translateY(-10px); opacity: 1; }
+  100% { transform: scale(0.8) translateY(-40px); opacity: 0; }
+}
+
+/* Modal Windows */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(8, 10, 16, 0.88);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal-box {
+  background: linear-gradient(180deg, #182030, #10141f);
+  border: 3px solid #00e5ff;
+  border-radius: 20px;
+  padding: 36px 42px;
+  max-width: 580px;
+  width: 90%;
+  box-shadow: 0 16px 48px rgba(0, 229, 255, 0.25);
+  text-align: center;
+}
+
+.retro-badge {
+  display: inline-block;
+  background: #ff1744;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.game-title {
+  font-size: 42px;
+  font-weight: 900;
+  color: #ffd600;
+  text-shadow: 0 0 20px rgba(255, 214, 0, 0.6);
+  margin-bottom: 4px;
+}
+
+.game-sub {
+  font-size: 15px;
+  font-weight: 700;
+  color: #00e5ff;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+
+.mission-briefing {
+  text-align: left;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mission-briefing ul {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.mission-briefing li {
+  margin-bottom: 6px;
+}
+
+/* Starter Vehicle Selector */
+.starter-vehicle-selector {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.starter-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: #ffd600;
+  margin-bottom: 10px;
+}
+
+.starter-vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.starter-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.starter-card:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #00e5ff;
+  transform: translateY(-2px);
+}
+
+.starter-card.active {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: #00e5ff;
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.5);
+}
+
+.starter-card-icon {
+  font-size: 24px;
+}
+
+.starter-card-name {
+  font-size: 13px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.starter-card.active .starter-card-name {
+  color: #00e5ff;
+}
+
+.starter-card-desc {
+  font-size: 10px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.btn-primary-start {
+  width: 100%;
+  background: linear-gradient(90deg, #ff1744, #ff9100);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+  padding: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255, 23, 68, 0.5);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255, 23, 68, 0.8);
+}
+
+.credit-tag {
+  font-size: 11px;
+  color: #888;
+  margin-top: 14px;
+}
+
+/* Summary Modal */
+.summary-box {
+  border-color: #ffd600;
+  box-shadow: 0 16px 48px rgba(255, 214, 0, 0.25);
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #ffd600;
+  margin-bottom: 12px;
+}
+
+.rank-stamp {
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 64px;
+  color: #ff1744;
+  text-shadow: 0 0 20px rgba(255, 23, 68, 0.6);
+  border: 4px dashed #ff1744;
+  border-radius: 16px;
+  display: inline-block;
+  padding: 4px 30px;
+  transform: rotate(-6deg);
+  margin-bottom: 18px;
+}
+
+.summary-details {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #ccc;
+}
+
+.detail-row.highlight-row {
+  font-size: 18px;
+  color: #ffd600;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.stars-text {
+  color: #ffd600;
+  font-size: 18px;
+}
+
+.customer-quote-box {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 4px solid #00e5ff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 22px;
+}
+
+.quote-header {
+  font-size: 11px;
+  font-weight: 900;
+  color: #00e5ff;
+  margin-bottom: 4px;
+}
+
+.quote-content {
+  font-size: 13px;
+  color: #fff;
+  line-height: 1.5;
+}
+
+/* Game Over Modal */
+.gameover-box {
+  border-color: #ff1744;
+}
+
+.gameover-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: #ff1744;
+  margin-bottom: 8px;
+}
+
+.gameover-reason {
+  font-size: 15px;
+  color: #ff8a80;
+  margin-bottom: 20px;
+}
+
+/* Radar Card & Mini-Map */
+.radar-card {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 4px solid #00e5ff;
+}
+
+#radar-canvas {
+  background: radial-gradient(circle, #081a28 0%, #03080e 100%);
+  border-radius: 50%;
+  border: 2px solid #00e5ff;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+}
+
+/* Camera Screen Flash */
+.screen-flash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 50;
+  transition: opacity 0.05s ease-out;
+}
+
+.screen-flash.flashing {
+  opacity: 0.95;
+  transition: none;
+}
+
+/* Fine Ticket Toast */
+.fine-toast {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #d50000, #b71c1c);
+  border: 3px solid #ffeb3b;
+  border-radius: 12px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #ffffff;
+  box-shadow: 0 8px 30px rgba(213, 0, 0, 0.8);
+  z-index: 80;
+  animation: slideFine 0.4s ease-out;
+}
+
+.fine-toast.hidden {
+  display: none;
+}
+
+@keyframes slideFine {
+  0% { transform: translate(-50%, -40px); opacity: 0; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.fine-icon {
+  font-size: 24px;
+}
+
+/* Achievement Unlocked Toast (成就解鎖彈窗) */
+.achievement-toast {
+  position: absolute;
+  top: 19%;
+  right: 24px;
+  background: rgba(16, 20, 30, 0.94);
+  border: 2px solid #ffd600;
+  border-radius: 14px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 30px rgba(255, 214, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 120;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.achievement-toast.hidden {
+  opacity: 0;
+  transform: translateX(50px) scale(0.9);
+  pointer-events: none;
+}
+
+.ach-icon {
+  font-size: 32px;
+  filter: drop-shadow(0 0 10px rgba(255, 214, 0, 0.8));
+}
+
+.ach-body {
+  text-align: left;
+}
+
+.ach-subtitle {
+  font-size: 10px;
+  font-weight: 900;
+  color: #ffd600;
+  letter-spacing: 1px;
+}
+
+.ach-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-top: 1px;
+}
+
+.ach-desc {
+  font-size: 11px;
+  color: #bbb;
+  margin-top: 2px;
+}
+
+.ach-pts {
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 16px;
+  color: #00e676;
+  text-shadow: 0 0 10px rgba(0, 230, 118, 0.6);
+  white-space: nowrap;
+}
+
+.btn-weather {
+  background: #00838f;
+  border-color: #4dd0e1;
+}
+
+.btn-weather:hover {
+  background: #0097a7;
+}
+
+/* Wheelie Badge */
+.wheelie-badge {
+  font-size: 13px;
+  font-weight: 900;
+  background: linear-gradient(90deg, #ff9100, #ff3d00);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 0 16px rgba(255, 61, 0, 0.9);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+}
+
+.wheelie-badge.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nitro Boost Badge */
+.nitro-badge {
+  font-size: 13px;
+  font-weight: 900;
+  background: linear-gradient(90deg, #00e5ff, #00b0ff, #7c4dff);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.95);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+  animation: pulseNitro 0.4s infinite alternate;
+}
+
+.nitro-badge.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes pulseNitro {
+  0% { transform: scale(1); box-shadow: 0 0 14px #00e5ff; }
+  100% { transform: scale(1.06); box-shadow: 0 0 28px #00b0ff; }
+}
+
+.btn-shop {
+  background: #7b1fa2;
+  border-color: #ba68c8;
+}
+
+.btn-shop:hover {
+  background: #9c27b0;
+}
+
+/* Garage Shop Modal */
+.shop-box {
+  max-width: 720px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  border-color: #ffd600;
+}
+
+.shop-funds-row {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.shop-funds-val {
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 24px;
+  color: #ffd600;
+}
+
+.shop-sections-container {
+  overflow-y: auto;
+  max-height: 48vh;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.shop-sec-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: #00e5ff;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+  padding-bottom: 4px;
+}
+
+.shop-item-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.shop-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.shop-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #00e5ff;
+}
+
+.shop-card.equipped {
+  border-color: #00e676;
+  background: rgba(0, 230, 118, 0.12);
+}
+
+.shop-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.shop-card-desc {
+  font-size: 11px;
+  color: #aaa;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.shop-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.cost-tag {
+  color: #ffd600;
+}
+
+.status-tag {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  background: #333;
+}
+
+.status-tag.equipped {
+  background: #00e676;
+  color: #000;
+}
+
+/* County Selector Bar (全台縣市路況列) */
+.county-bar-row {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  gap: 10px;
+  background: rgba(16, 20, 28, 0.88);
+  border: 1.5px solid rgba(0, 229, 255, 0.3);
+  border-radius: 30px;
+  padding: 6px 16px;
+  margin-top: 8px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55);
+  pointer-events: auto;
+  z-index: 15;
+}
+
+.county-bar-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: #ffd600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.county-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.county-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 4px 11px;
+  color: #ddd;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.county-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.county-btn.active {
+  background: linear-gradient(90deg, #00e5ff, #00b0ff);
+  color: #000;
+  font-weight: 900;
+  border-color: #00e5ff;
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.7);
+}
+
+/* County Arrival Banner (縣市入境大橫幅) */
+.county-banner {
+  position: absolute;
+  top: 13%;
+  left: 50%;
+  transform: translate(-50%, 0) scale(1);
+  text-align: center;
+  pointer-events: none;
+  z-index: 90;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.county-banner.hidden {
+  opacity: 0;
+  transform: translate(-50%, -25px) scale(0.85);
+}
+
+.county-banner-name {
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 44px;
+  color: #ffd600;
+  text-shadow: 0 0 25px rgba(255, 214, 0, 0.85), 2px 2px 0 #000;
+  letter-spacing: 2px;
+}
+
+.county-banner-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: #00e5ff;
+  text-shadow: 0 0 14px rgba(0, 229, 255, 0.8), 1px 1px 0 #000;
+  margin-top: 2px;
+}
+
+.county-banner-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(16, 20, 28, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 4px 18px;
+  display: inline-block;
+  margin-top: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+

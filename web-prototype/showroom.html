@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>福爾摩沙車輛展示室</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#142527;color:#eee4d0;font-family:'Microsoft JhengHei',sans-serif;overflow:hidden}
+    canvas{display:block;width:100vw;height:100dvh;touch-action:none}
+    header{position:absolute;top:30px;left:34px;pointer-events:none}small{color:#adc6b5;letter-spacing:3px;font-size:10px}h1{font-size:30px;margin:10px 0}header p{font-size:12px;color:#a9b9b4}
+    aside{position:absolute;right:30px;top:30px;bottom:30px;width:250px;background:#11272be8;padding:24px;border:1px solid #a2b0a433;border-radius:12px;overflow:auto}
+    h2{font-size:15px;margin:0 0 16px}button,a{font:inherit}button{display:block;width:100%;text-align:left;background:#ffffff06;border:1px solid #bfc7b426;color:#d3dcd6;padding:12px 14px;border-radius:6px;margin-bottom:7px;cursor:pointer;font-size:12px}
+    button[aria-pressed="true"]{border-color:#e8bd79;color:#f2d5a7;background:#e8bd791a}button:hover{background:#ffffff12}
+    .description{font-size:12px;line-height:1.9;color:#aec3b8;margin:20px 0}.back{display:block;color:#e8bd79;text-decoration:none;font-size:13px;margin-top:25px}
+    footer{position:absolute;left:34px;bottom:28px;color:#a4b7af;font-size:11px;background:#142b2fbb;padding:9px 14px;border-radius:5px}
+    @media(max-width:700px){header{left:18px;top:18px}h1{font-size:23px}header p{display:none}aside{left:12px;right:12px;top:auto;bottom:12px;width:auto;height:190px;padding:12px}#vehicles{display:flex;gap:6px;overflow-x:auto}#vehicles button{min-width:120px}.description{display:none}aside h2{margin:0 0 8px}.back{margin-top:12px}footer{bottom:216px;left:12px;font-size:10px}}
+  </style>
+</head>
+<body>
+  <header><small>FORMOSA / MOTOR GALLERY</small><h1 id="model-title">勁戰 · 城市外送</h1><p>遊戲內實際車輛 · 拖曳旋轉，滾輪縮放</p></header>
+  <canvas id="showroom-canvas" aria-label="可旋轉的三維車輛展示"></canvas>
+  <aside>
+    <h2>選一台，靠近看看。</h2>
+    <div id="vehicles">
+      <button data-model="cygnus" aria-pressed="true">01 / 勁戰外送機車</button>
+      <button data-model="vespa" aria-pressed="false">02 / 象牙白復古機車</button>
+      <button data-model="van" aria-pressed="false">03 / 都會廂型車</button>
+      <button data-model="taxi" aria-pressed="false">04 / 台灣小黃</button>
+      <button data-model="truck" aria-pressed="false">05 / 藍色發財車</button>
+    </div>
+    <p class="description" id="model-detail">曲面車殼、金屬避震、輪框、座椅滾邊與外送裝備。</p>
+    <button id="toggle-rotation" aria-pressed="false">自動旋轉：關</button>
+    <a class="back" href="./index.html">← 回到街上，開始騎車</a>
+  </aside>
+  <footer>左鍵 / 單指旋轉　·　滾輪 / 雙指縮放</footer>
+  <script type="module" src="/src/showroom.js"></script>
+</body>
+</html>

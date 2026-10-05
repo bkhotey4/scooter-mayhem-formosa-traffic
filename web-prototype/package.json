@@ -1,0 +1,24 @@
+{
+  "name": "scooter-mayhem-formosa-traffic",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host --port 3000",
+    "build": "vite build",
+    "test": "node --test scripts/regression.test.js",
+    "preview": "vite preview",
+    "playtest": "node scripts/ai_playtest.js",
+    "record": "node scripts/record_playthrough.js",
+    "lobby": "node server/lobby_server.js"
+  },
+  "dependencies": {
+    "cannon-es": "^0.20.0",
+    "peerjs": "^1.5.5",
+    "three": "^0.186.1",
+    "vite": "^5.4.11",
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^21.6.0"
+  }
+}

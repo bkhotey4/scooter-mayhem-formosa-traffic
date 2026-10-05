@@ -1,0 +1,18 @@
+{
+  "name": "scooter-mayhem-formosa-traffic",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host --port 3000",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "cannon-es": "^0.20.0",
+    "three": "^0.186.1",
+    "vite": "^5.4.11"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^21.6.0"
+  }
+}

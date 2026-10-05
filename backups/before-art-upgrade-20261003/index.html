@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>違停大作戰：福爾摩沙機車狂潮 - Scooter Mayhem Formosa Traffic</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 3D Canvas -->
+  <div id="canvas-container"></div>
+
+  <!-- Visor Water Droplets Overlay (冷氣滴水畫面) -->
+  <div id="visor-overlay" class="visor-overlay">
+    <div class="wiper-arm" id="wiper-arm"></div>
+  </div>
+
+  <!-- HUD Interface -->
+  <div id="hud-container">
+    <!-- Top Bar: Mission, Timer, Distance -->
+    <div class="top-bar">
+      <div class="hud-card mission-card">
+        <div class="card-label">CURRENT ORDER ｜ 當前外送目標</div>
+        <div id="target-name" class="target-name">科技新貴 (開雙黃燈阿法車主)</div>
+        <div class="target-sub">距離: <span id="target-dist" class="highlight-cyan">0m</span> ｜ 導航箭頭指引</div>
+      </div>
+
+      <div class="hud-card timer-card">
+        <div class="card-label">TIME LIMIT ｜ 倒數計時</div>
+        <div id="timer-display" class="timer-display">60</div>
+      </div>
+
+      <div class="hud-card score-card">
+        <div class="card-label">TOTAL EARNINGS ｜ 外送總收益</div>
+        <div class="earnings-val">$ <span id="earnings-display">0</span></div>
+        <div class="score-val">SCORE: <span id="score-display">0</span></div>
+      </div>
+
+      <!-- Real-time Circular Mini-Map Radar -->
+      <div class="hud-card radar-card">
+        <div class="card-label">RADAR ｜ 街區雷達</div>
+        <canvas id="radar-canvas" width="120" height="120"></canvas>
+      </div>
+    </div>
+
+    <!-- County Selector Bar (全台縣市路況切換) -->
+    <div class="county-bar-row">
+      <span class="county-bar-title">📍 縣市路況：</span>
+      <div class="county-pills" id="county-pills">
+        <button class="county-btn active" data-county="TAIPEI">🏙️ 新北/台北</button>
+        <button class="county-btn" data-county="HSINCHU">💨 新竹風城</button>
+        <button class="county-btn" data-county="TAICHUNG">⚾ 台中慶記</button>
+        <button class="county-btn" data-county="TAINAN">🍬 台南全糖</button>
+        <button class="county-btn" data-county="KAOHSIUNG">⚓ 高雄港都</button>
+        <button class="county-btn" data-county="KEELUNG">🌧️ 基隆雨港</button>
+        <button class="county-btn" data-county="YILAN">⛰️ 宜蘭北宜</button>
+      </div>
+    </div>
+
+    <!-- County Arrival Banner Overlay -->
+    <div id="county-banner" class="county-banner hidden">
+      <div id="county-banner-name" class="county-banner-name">新北 / 台北</div>
+      <div id="county-banner-title" class="county-banner-title">【中永和百慕達迷宮 ＆ 台北橋機車瀑布】</div>
+      <div id="county-banner-tag" class="county-banner-tag">「永和有永和路，中和也有永和路！」</div>
+    </div>
+
+    <!-- Screen Camera Flash Overlay -->
+    <div id="screen-flash" class="screen-flash"></div>
+
+    <!-- Fine Ticket Toast -->
+    <div id="fine-toast" class="fine-toast hidden">
+      <span class="fine-icon">📸</span>
+      <span id="fine-msg" class="fine-msg">【超速照相罰單】 - 扣除小費 $300！</span>
+    </div>
+
+    <!-- Center: Combo Popup Area -->
+    <div id="combo-container" class="combo-container"></div>
+
+    <!-- Bottom Left: Boba Tea Physics Monitor -->
+    <div class="bottom-left">
+      <div class="hud-card boba-monitor-card">
+        <div class="monitor-header">
+          <span class="pulse-dot"></span>
+          <span>黑糖珍珠鮮奶 物理監控儀</span>
+        </div>
+
+        <div class="boba-visual-row">
+          <!-- 2D Interactive Slosh Canvas -->
+          <canvas id="boba-canvas" width="130" height="150"></canvas>
+
+          <div class="boba-stats-col">
+            <!-- Liquid Gauge -->
+            <div class="stat-group">
+              <div class="stat-labels">
+                <span>茶湯殘量</span>
+                <span id="liquid-pct" class="stat-num">100%</span>
+              </div>
+              <div class="meter-bar-bg">
+                <div id="liquid-bar" class="meter-bar-fill liquid-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+
+            <!-- Seal HP Gauge -->
+            <div class="stat-group">
+              <div class="stat-labels">
+                <span>封膜耐久度</span>
+                <span id="seal-pct" class="stat-num">100%</span>
+              </div>
+              <div class="meter-bar-bg">
+                <div id="seal-bar" class="meter-bar-fill seal-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+
+            <div id="boba-alert" class="boba-alert-badge">★ 封膜完好 ★</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Right: Speedometer & Controls -->
+    <div class="bottom-right">
+      <div id="nitro-badge" class="nitro-badge">⚡ 結冰水 氮氣狂飆 120 KM/H！⚡</div>
+      <div id="wheelie-badge" class="wheelie-badge">⚡ 翹孤輪 遮牌中！⚡</div>
+      <div id="gutter-badge" class="gutter-badge">⚡ 水溝蓋跑法 加速中！ ⚡</div>
+      
+      <div class="hud-card speedo-card">
+        <div class="speedo-val"><span id="speed-display">0</span> <span class="speed-unit">KM/H</span></div>
+        <div id="speedo-sub" class="speedo-sub">125cc 勁戰四代 ｜ 原廠黑鐵管</div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="quick-controls">
+        <button id="btn-horn" class="hud-btn btn-horn">📢 叭叭！(H)</button>
+        <button id="btn-camera" class="hud-btn">🎥 視角 (C)</button>
+        <button id="btn-weather" class="hud-btn btn-weather">🌅 逢甲黃昏 (T)</button>
+        <button id="btn-shop" class="hud-btn btn-shop">🏪 車行改裝</button>
+        <button id="btn-mute" class="hud-btn">🔊 聲音</button>
+        <button id="btn-reset" class="hud-btn">🔄 重生 (R)</button>
+      </div>
+    </div>
+
+    <!-- Achievement Unlocked Toast -->
+    <div id="achievement-toast" class="achievement-toast hidden">
+      <div class="ach-icon">🏆</div>
+      <div class="ach-body">
+        <div class="ach-subtitle">ACHIEVEMENT UNLOCKED ｜ 成就解鎖</div>
+        <div id="ach-title" class="ach-title">【這很台北橋】</div>
+        <div id="ach-desc" class="ach-desc">在車陣中完成 5 次極限鑽車縫！</div>
+      </div>
+      <div id="ach-pts" class="ach-pts">+1500 PTS</div>
+    </div>
+
+    <!-- Keybind Guide Pill -->
+    <div class="keybind-pill">
+      <span><b>W / ↑</b> 加速</span>
+      <span><b>A D / ← →</b> 壓車轉彎</span>
+      <span><b>Shift / Q</b> 翹孤輪遮牌</span>
+      <span><b>空白鍵</b> 甩尾急煞</span>
+      <span><b>H</b> 按喇叭</span>
+      <span><b>水溝蓋</b> 極限加速</span>
+    </div>
+  </div>
+
+  <!-- Start Game Modal Overlay -->
+  <div id="start-modal" class="modal-overlay">
+    <div class="modal-box start-box">
+      <div class="retro-badge">TAIWAN INDIE MEME PROJECT</div>
+      <h1 class="game-title">《違停大作戰》</h1>
+      <h2 class="game-sub">福爾摩沙機車狂潮 ｜ SCOOTER MAYHEM</h2>
+
+      <div class="mission-briefing">
+        <p><b>【外送派遣令】</b></p>
+        <p>你是一名奔馳在台灣地獄車陣的傳奇外送員。</p>
+        <p>後座載著嬌貴的<b>「正宗黑糖珍珠鮮奶」</b>，封膜極度脆弱！</p>
+        <ul>
+          <li>🚗 <b>違停阿法神車</b>：隨時可能暴力突開車門，請極限側身閃避！</li>
+          <li>👵 <b>菜市場三寶阿嬤</b>：打右轉燈卻突然鬼切大左轉，注意迴避！</li>
+          <li>🐕 <b>台灣野生黑狗</b>：巷弄追車狂吠，按喇叭逼退！</li>
+          <li>⚡ <b>水溝蓋跑法</b>：壓在路邊排水鐵蓋上觸發火花超狂加速！</li>
+        </ul>
+      <!-- Starter Vehicle Selector -->
+      <div class="starter-vehicle-selector">
+        <div class="starter-title">🛵 挑選你的出發神車 (Select Your Starting Scooter)：</div>
+        <div class="starter-vehicle-grid" id="starter-vehicle-grid">
+          <div class="starter-card active" data-vehicle="cygnus">
+            <div class="starter-card-icon">🛵</div>
+            <div class="starter-card-name">勁戰四代 (125cc)</div>
+            <div class="starter-card-desc">靈活過彎 ｜ 運動化底盤</div>
+          </div>
+          <div class="starter-card" data-vehicle="haomai">
+            <div class="starter-card-icon">🧺</div>
+            <div class="starter-card-name">豪邁 125 (國民神車)</div>
+            <div class="starter-card-desc">經典鐵絲菜籃 ｜ 耐撞損耗減半</div>
+          </div>
+          <div class="starter-card" data-vehicle="vespa">
+            <div class="starter-card-icon">✨</div>
+            <div class="starter-card-name">偉士牌復古白鐵</div>
+            <div class="starter-card-desc">文青電鍍 ｜ 直線極速 92km/h</div>
+          </div>
+          <div class="starter-card" data-vehicle="many">
+            <div class="starter-card-icon">⚡</div>
+            <div class="starter-card-name">光陽 Many 110</div>
+            <div class="starter-card-desc">起步加速+40% ｜ 鑽車縫王者</div>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-start-game" class="btn-primary-start">🛵 發動引擎！開始狂飆！</button>
+      <div class="credit-tag">專為實況爆笑與迷因設計 ｜ 支援 Unity 移植擴充 ｜ 換車快捷鍵 (V)</div>
+    </div>
+  </div>
+
+  <!-- Order Complete Modal Overlay -->
+  <div id="summary-modal" class="modal-overlay hidden">
+    <div class="modal-box summary-box">
+      <div class="modal-title">📦 外送結算單</div>
+      <div id="summary-rank" class="rank-stamp">SSS</div>
+
+      <div class="summary-details">
+        <div class="detail-row">
+          <span>顧客評價星等：</span>
+          <span id="summary-stars" class="stars-text">★★★★★</span>
+        </div>
+        <div class="detail-row">
+          <span>茶湯殘留率：</span>
+          <span id="summary-liquid">95%</span>
+        </div>
+        <div class="detail-row">
+          <span>封膜耐久度：</span>
+          <span id="summary-seal">85%</span>
+        </div>
+        <div class="detail-row highlight-row">
+          <span>外送酬勞小費：</span>
+          <span id="summary-pay">$ 380</span>
+        </div>
+      </div>
+
+      <div class="customer-quote-box">
+        <div class="quote-header">顧客即時反饋：</div>
+        <div id="summary-comment" class="quote-content">「超讚！封膜完好無缺，黑糖虎紋依舊漂亮，珍珠Q彈！」</div>
+      </div>
+
+      <button id="btn-next-order" class="btn-primary-start">📦 接下一單！</button>
+    </div>
+  </div>
+
+  <!-- Game Over Modal Overlay -->
+  <div id="gameover-modal" class="modal-overlay hidden">
+    <div class="modal-box gameover-box">
+      <div class="gameover-title">💀 外送失敗！</div>
+      <div id="gameover-reason" class="gameover-reason">外送逾時，顧客怒退單！</div>
+
+      <div class="summary-details">
+        <div class="detail-row">
+          <span>本次累計得分：</span>
+          <span id="go-score">0</span>
+        </div>
+        <div class="detail-row">
+          <span>累計賺取收入：</span>
+          <span id="go-earnings">$ 0</span>
+        </div>
+      </div>
+
+      <button id="btn-retry" class="btn-primary-start">🔄 重新挑戰！</button>
+    </div>
+  </div>
+
+  <!-- Garage & Upgrade Shop Modal -->
+  <div id="shop-modal" class="modal-overlay hidden">
+    <div class="modal-box shop-box">
+      <div class="retro-badge">FORMOSA TUNING GARAGE</div>
+      <div class="modal-title">🏪 阿明機車行 ｜ 裝備升級車庫</div>
+      <div class="shop-funds-row">
+        <span>外送員小費存款：</span>
+        <span class="shop-funds-val">$ <span id="shop-cash-display">0</span></span>
+      </div>
+
+      <!-- Upgrade Grid Items -->
+      <div class="shop-sections-container">
+        <!-- Vehicle Selection Section -->
+        <div class="shop-section">
+          <div class="shop-sec-title">🛵 台灣經典神車切換 (Taiwanese Scooters)</div>
+          <div class="shop-item-cards" id="cards-vehicle"></div>
+        </div>
+
+        <!-- Box Upgrade Section -->
+        <div class="shop-section">
+          <div class="shop-sec-title">📦 外送防震箱升級</div>
+          <div class="shop-item-cards" id="cards-box"></div>
+        </div>
+
+        <!-- Seal Upgrade Section -->
+        <div class="shop-section">
+          <div class="shop-sec-title">🥤 珍奶封膜強化技術</div>
+          <div class="shop-item-cards" id="cards-seal"></div>
+        </div>
+
+        <!-- Exhaust Upgrade Section -->
+        <div class="shop-section">
+          <div class="shop-sec-title">🛵 改裝回壓白鐵管</div>
+          <div class="shop-item-cards" id="cards-exhaust"></div>
+        </div>
+
+        <!-- Horn Sound Section -->
+        <div class="shop-section">
+          <div class="shop-sec-title">📢 迷因喇叭聲音</div>
+          <div class="shop-item-cards" id="cards-horn"></div>
+        </div>
+      </div>
+
+      <button id="btn-close-shop" class="btn-primary-start" style="margin-top: 16px;">🛵 改裝完成！出發上路！</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
