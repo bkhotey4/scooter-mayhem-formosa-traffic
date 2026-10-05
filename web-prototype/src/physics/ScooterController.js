@@ -1,6 +1,7 @@
 // ScooterController.js - Arcade 2-Wheel Scooter Physics, Leaning & Drifting
 import * as THREE from 'three';
 import { dampedSpring, isTypingTarget } from '../game/RideFeedback.js';
+import { modelLoader } from '../models/ModelLoader.js';
 
 export class ScooterController {
   constructor(scooterMesh, soundManager) {
@@ -997,10 +998,34 @@ export class ScooterController {
   }
 
   updateVisualUpgrades(equipped, factory) {
-    const cowl = this.mesh.getObjectByName('scooterCowl');
-    const seatBody = this.mesh.getObjectByName('scooterSeatBody');
-    const exhaust = this.mesh.getObjectByName('scooterExhaust');
-    const basket = this.mesh.getObjectByName('scooterBasket');
+    const cowl = this.mesh?.getObjectByName?.('scooterCowl');
+    const seatBody = this.mesh?.getObjectByName?.('scooterSeatBody');
+    const exhaust = this.mesh?.getObjectByName?.('scooterExhaust');
+    const basket = this.mesh?.getObjectByName?.('scooterBasket');
+
+    // 0. Custom GLTF/GLB Model Integration
+    const vehicleId = equipped?.vehicle || 'cygnus';
+    this.currentVehicleId = vehicleId;
+    const existingCustom = this.mesh?.getObjectByName?.('customGlbModel');
+    if (existingCustom) {
+      this.mesh.remove(existingCustom);
+    }
+
+    if (modelLoader && this.mesh) {
+      modelLoader.loadVehicle(vehicleId).then(customModel => {
+        if (this.currentVehicleId !== vehicleId || !this.mesh) return;
+        if (customModel) {
+          customModel.name = 'customGlbModel';
+          this.mesh.add(customModel);
+          if (cowl) cowl.visible = false;
+          if (seatBody) seatBody.visible = false;
+          if (basket) basket.visible = false;
+        } else {
+          if (cowl) cowl.visible = true;
+          if (seatBody) seatBody.visible = true;
+        }
+      }).catch(() => {});
+    }
 
     // 1. Vehicle Paint and Aesthetics
     if (cowl && seatBody) {
