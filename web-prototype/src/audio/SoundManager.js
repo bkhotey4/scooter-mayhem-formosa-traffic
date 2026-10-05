@@ -588,6 +588,27 @@ export class SoundManager {
     });
   }
 
+  playGameOverSound() {
+    if (!this.initialized || this.muted || !this.ctx) return;
+    const notes = [293.66, 277.18, 261.63, 220.00]; // D4, C#4, C4, A3 (melancholy descending)
+    notes.forEach((freq, idx) => {
+      setTimeout(() => {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+        osc.connect(gain);
+        gain.connect(this.out);
+        osc.start(now);
+        osc.stop(now + 0.39);
+      }, idx * 140);
+    });
+  }
+
   startBGM() {
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume();

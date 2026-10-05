@@ -207,7 +207,7 @@ export class GameMode {
     }
 
     // Critical cargo failure checks
-    if (this.currentCargo.id === 'boba' && this.boba.liquid <= 0) {
+    if (this.currentCargo.id === 'boba' && (this.boba.liquid <= 1 || Math.round(this.boba.liquid) <= 0)) {
       this.streak = 0;
       this.gameOver('珍奶全灑光了！顧客憤怒退單！');
       return;
@@ -218,6 +218,10 @@ export class GameMode {
     } else if (this.currentCargo.id === 'shaved_ice' && this.boba.iceVolume <= 5) {
       this.streak = 0;
       this.gameOver('挫冰化成洗碗水！顧客拒收退單！');
+      return;
+    } else if (this.currentCargo.id === 'fried_chicken' && (this.boba.chickenTemp <= 30 || this.boba.crispiness <= 10)) {
+      this.streak = 0;
+      this.gameOver('雞排徹底冷掉軟爛！顧客憤怒退單！');
       return;
     }
 
@@ -316,6 +320,7 @@ export class GameMode {
 
   gameOver(reason) {
     this.state = 'GAME_OVER';
+    this.sound?.playGameOverSound?.();
     this.sound?.speak('外送失敗！');
     if (this.onStateChange) {
       this.onStateChange(this.state, {

@@ -119,7 +119,7 @@ class GameApp {
       summarySeal: document.getElementById('summary-seal'),
       summaryPay: document.getElementById('summary-pay'),
       summaryComment: document.getElementById('summary-comment'),
-      goReason: document.getElementById('go-reason'),
+      goReason: document.getElementById('gameover-reason') || document.getElementById('go-reason'),
       goScore: document.getElementById('go-score'),
       goEarnings: document.getElementById('go-earnings'),
       countyPills: document.getElementById('county-pills'),
@@ -534,14 +534,13 @@ class GameApp {
     });
 
     this.ui.btnRetry.addEventListener('click', () => {
-      this.ui.gameoverModal.classList.add('hidden');
+      this.ui.gameoverModal?.classList.add('hidden');
       this.controller.reset(this.cityData.bobaShop.x, this.cityData.bobaShop.z, 0);
-      this.boba.liquid = 100;
-      this.boba.sealHp = 100;
-      this.boba.isSealBroken = false;
+      this.boba.reset();
       this.gameMode.initMissions(this.cityData.destinations);
       this.streetLife.reset();
       this.gameMode.startDelivery();
+      this.updateHUD();
     });
 
     this.ui.btnHorn.addEventListener('click', () => {
@@ -592,6 +591,7 @@ class GameApp {
       }
       if (e.key === 'Escape' && this.running) {
         e.preventDefault();
+        if (this.gameMode?.state === 'GAME_OVER' || this.gameMode?.state === 'SUMMARY') return;
         if (!this.ui.shopModal.classList.contains('hidden')) {
           this.ui.shopModal.classList.add('hidden');
           this.controller.keys = {};
@@ -674,6 +674,7 @@ class GameApp {
   }
 
   setPaused(paused) {
+    if (paused && (this.gameMode?.state === 'GAME_OVER' || this.gameMode?.state === 'SUMMARY')) return;
     this.paused = paused;
     this.controller.keys = {};
     this.controller.hornPressed = false;
@@ -817,10 +818,11 @@ class GameApp {
       this.ui.summaryComment.innerText = `「${res.comment}」`;
       this.ui.summaryModal.classList.remove('hidden');
     } else if (state === 'GAME_OVER') {
-      this.ui.goReason.innerText = data.reason;
-      this.ui.goScore.innerText = data.score;
-      this.ui.goEarnings.innerText = `$ ${data.earnings}`;
-      this.ui.gameoverModal.classList.remove('hidden');
+      if (this.ui.goReason) this.ui.goReason.innerText = data?.reason || '外送失敗！';
+      if (this.ui.goScore) this.ui.goScore.innerText = data?.score ?? 0;
+      if (this.ui.goEarnings) this.ui.goEarnings.innerText = `$ ${data?.earnings ?? 0}`;
+      if (this.ui.gameoverModal) this.ui.gameoverModal.classList.remove('hidden');
+      this.sound?.updateEngine(0, false);
     }
   }
 

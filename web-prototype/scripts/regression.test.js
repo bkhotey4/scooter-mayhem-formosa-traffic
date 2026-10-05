@@ -369,3 +369,108 @@ test('returnToMainMenu resets active delivery, pauses state and restores start m
   assert.equal(appMock.ui.summaryModal.classList.hidden, true);
   assert.equal(appMock.ui.gameoverModal.classList.hidden, true);
 });
+
+test('critical cargo depletion and timeouts reliably trigger GAME_OVER', () => {
+  const boba = new BobaPhysics(null);
+  const game = new GameMode(null, boba);
+  game.initMissions([{ id: 'test', name: '測試點', pos: new THREE.Vector3(100, 0, 100) }]);
+
+  let lastState = null;
+  let lastData = null;
+  game.onStateChange = (state, data) => {
+    lastState = state;
+    lastData = data;
+  };
+
+  // 1. Boba depleted (including fractional liquid < 1% that rounds to 0%)
+  game.startDelivery('delivery');
+  assert.equal(game.state, 'DELIVERING');
+  boba.liquid = 0.4;
+  game.update(0.016, new THREE.Vector3(0, 0, 0), 10);
+  assert.equal(game.state, 'GAME_OVER');
+  assert.equal(lastState, 'GAME_OVER');
+  assert.ok(lastData.reason.includes('珍奶全灑光'));
+
+  // 2. Eggs cracked
+  game.startDelivery('delivery');
+  game.currentCargo = CARGO_TYPES.find(c => c.id === 'eggs');
+  boba.setCargoType('eggs');
+  boba.eggsIntact = 0;
+  game.update(0.016, new THREE.Vector3(0, 0, 0), 10);
+  assert.equal(game.state, 'GAME_OVER');
+  assert.ok(lastData.reason.includes('雞蛋'));
+
+  // 3. Shaved ice melted
+  game.startDelivery('delivery');
+  game.currentCargo = CARGO_TYPES.find(c => c.id === 'shaved_ice');
+  boba.setCargoType('shaved_ice');
+  boba.iceVolume = 4;
+  game.update(0.016, new THREE.Vector3(0, 0, 0), 10);
+  assert.equal(game.state, 'GAME_OVER');
+  assert.ok(lastData.reason.includes('挫冰'));
+
+  // 4. Fried chicken cooled
+  game.startDelivery('delivery');
+  game.currentCargo = CARGO_TYPES.find(c => c.id === 'fried_chicken');
+  boba.setCargoType('fried_chicken');
+  boba.chickenTemp = 25;
+  game.update(0.016, new THREE.Vector3(0, 0, 0), 10);
+  assert.equal(game.state, 'GAME_OVER');
+  assert.ok(lastData.reason.includes('雞排'));
+
+  // 5. Timer expired
+  game.startDelivery('delivery');
+  game.timeRemaining = 0.01;
+  game.update(0.05, new THREE.Vector3(0, 0, 0), 10);
+  assert.equal(game.state, 'GAME_OVER');
+  assert.ok(lastData.reason.includes('時間到'));
+});
+
+test('game over modal gracefully displays with gameover-reason id and suppresses pause modal', () => {
+  const gameoverModal = { classList: { classes: new Set(['hidden']), remove(c) { this.classes.delete(c); }, add(c) { this.classes.add(c); }, contains(c) { return this.classes.has(c); } } };
+  const pauseModal = { classList: { classes: new Set(['hidden']), toggle(c, val) { if (val) this.classes.add(c); else this.classes.delete(c); } } };
+  const goReason = { innerText: '' };
+  const goScore = { innerText: '' };
+  const goEarnings = { innerText: '' };
+
+  let engineStopped = false;
+
+  const mockApp = {
+    gameMode: { state: 'GAME_OVER' },
+    paused: false,
+    sound: { updateEngine(speed, accel) { if (speed === 0 && !accel) engineStopped = true; } },
+    ui: {
+      gameoverModal,
+      goReason,
+      goScore,
+      goEarnings
+    },
+    handleGameStateChange(state, data) {
+      if (state === 'GAME_OVER') {
+        if (this.ui.goReason) this.ui.goReason.innerText = data?.reason || '外送失敗！';
+        if (this.ui.goScore) this.ui.goScore.innerText = data?.score ?? 0;
+        if (this.ui.goEarnings) this.ui.goEarnings.innerText = `$ ${data?.earnings ?? 0}`;
+        if (this.ui.gameoverModal) this.ui.gameoverModal.classList.remove('hidden');
+        this.sound?.updateEngine(0, false);
+      }
+    },
+    setPaused(paused) {
+      if (paused && (this.gameMode?.state === 'GAME_OVER' || this.gameMode?.state === 'SUMMARY')) return;
+      this.paused = paused;
+      pauseModal.classList.toggle('hidden', !paused);
+    }
+  };
+
+  mockApp.handleGameStateChange('GAME_OVER', { reason: '珍奶全灑光了！顧客憤怒退單！', score: 250, earnings: 0 });
+  assert.equal(goReason.innerText, '珍奶全灑光了！顧客憤怒退單！');
+  assert.equal(goScore.innerText, 250);
+  assert.equal(goEarnings.innerText, '$ 0');
+  assert.equal(gameoverModal.classList.contains('hidden'), false, 'Game over modal must be unhidden');
+  assert.equal(engineStopped, true, 'Engine sound must stop on game over');
+
+  // Attempting to pause while in GAME_OVER must be ignored
+  mockApp.setPaused(true);
+  assert.equal(mockApp.paused, false);
+  assert.equal(pauseModal.classList.classes.has('hidden'), true);
+});
+

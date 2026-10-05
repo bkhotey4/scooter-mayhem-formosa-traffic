@@ -204,6 +204,7 @@ export class BobaPhysics {
     if (overflowSeverity > 0 && this.liquid > 0) {
       this.spillRate = overflowSeverity * (this.isSealBroken ? 28 : 12) * dt;
       this.liquid = Math.max(0, this.liquid - this.spillRate);
+      if (this.liquid < 0.5) this.liquid = 0;
       this.totalSpilled += this.spillRate;
 
       if (Math.random() < 0.6 && worldPos) {
