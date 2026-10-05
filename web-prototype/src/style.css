@@ -1463,9 +1463,8 @@ body { font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; }
 .radar-card { border-right: 1px solid #e8dfc02b; }
 #radar-canvas { border-color: #89d2ba66; box-shadow: none; }
 .county-bar-row { position: absolute; top: 146px; left: 20px; margin: 0; border-radius: 6px; padding: 6px 9px; background: #172e32e8; border: 1px solid #e8dfc02b; backdrop-filter: none; box-shadow: none; }
-.county-bar-title { display: none; }
-.county-btn { font-size: 10px; padding: 4px 7px; border: none; border-radius: 4px; }
-.county-btn.active { background: var(--jade); box-shadow: none; color: var(--ink); }
+.county-bar-row .county-btn { font-size: 10px; padding: 4px 7px; border: none; border-radius: 4px; }
+.county-bar-row .county-btn.active { background: var(--jade); box-shadow: none; color: var(--ink); }
 .street-card { position: absolute; top: 200px; left: 22px; background: linear-gradient(90deg, #172e32ed, #172e3266); border-left: 2px solid var(--amber); padding: 12px 16px; border-radius: 0 6px 6px 0; }
 .street-eyebrow { color: var(--amber); font-size: 9px; letter-spacing: 2px; margin-bottom: 5px; }
 #district-name { font-size: 22px; font-weight: 900; letter-spacing: 2px; }
@@ -1499,114 +1498,403 @@ body { font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; }
 
 /* Start Screen Split Layout & 2-Step Flow */
 .start-box {
-  max-width: 980px !important;
-  width: 96% !important;
+  max-width: 1520px !important;
+  width: 95vw !important;
   text-align: left !important;
-  padding: 16px 26px 20px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 10px 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
 }
+
 .start-header {
   text-align: center;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 .start-header .game-title {
-  font-size: 30px !important;
+  font-size: 34px !important;
+  font-weight: 900 !important;
+  letter-spacing: 2px !important;
+  color: #f6e7cb !important;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8) !important;
   margin-bottom: 2px !important;
 }
 .start-header .game-sub {
-  font-size: 11px !important;
-  margin-bottom: 4px !important;
+  font-size: 13px !important;
+  letter-spacing: 1.5px !important;
+  color: var(--jade) !important;
+  margin-bottom: 6px !important;
 }
 .start-header .retro-badge {
-  font-size: 9px !important;
-  padding: 2px 8px !important;
-  margin-bottom: 4px !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  letter-spacing: 2px !important;
+  margin-bottom: 6px !important;
 }
+
 .start-step-nav {
   display: flex;
-  gap: 10px;
-  margin: 8px 0 12px;
-  border-bottom: 1px solid rgba(232, 223, 192, 0.2);
-  padding-bottom: 10px;
+  gap: 16px;
+  width: min(720px, 92vw);
+  margin: 6px auto 14px;
 }
 .start-step-btn {
   flex: 1;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(232, 223, 192, 0.25);
-  border-radius: 8px;
+  padding: 11px 18px;
+  background: rgba(14, 38, 46, 0.85);
+  border: 1.5px solid rgba(232, 223, 192, 0.3);
+  border-radius: 10px;
   color: #c5d9d2;
   font: inherit;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
 }
 .start-step-btn .step-num {
-  font-size: 15px;
+  font-size: 18px;
   color: var(--amber);
 }
 .start-step-btn.active {
-  background: rgba(239, 199, 134, 0.18);
+  background: rgba(239, 199, 134, 0.25);
   border-color: var(--amber);
   color: #fff4d5;
-  box-shadow: 0 4px 16px rgba(239, 199, 134, 0.15);
+  box-shadow: 0 6px 20px rgba(239, 199, 134, 0.25);
 }
 .start-step-btn:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
 }
+
+.start-page-section {
+  width: 100%;
+}
+
+/* Two Huge Separate Windows (Left Window & Right Window) */
 .start-split-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 10px;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 28px !important;
+  width: 100% !important;
+  align-items: stretch !important;
+  margin-bottom: 10px !important;
 }
-@media (max-width: 820px) {
+
+@media (max-width: 900px) {
   .start-split-container {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .start-box {
-    padding: 14px !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
   }
 }
-.start-col-box {
-  background: rgba(11, 34, 42, 0.55);
-  border: 1px solid rgba(232, 223, 192, 0.2);
-  border-radius: 10px;
-  padding: 14px 16px;
-  height: 100%;
-  box-sizing: border-box;
+
+/* Left Window Card */
+.start-col-left .start-col-box {
+  background: rgba(9, 26, 32, 0.94) !important;
+  border: 2px solid rgba(239, 199, 134, 0.5) !important;
+  border-radius: 18px !important;
+  padding: 24px 28px !important;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 28px rgba(239, 199, 134, 0.12) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
+  backdrop-filter: blur(12px) !important;
 }
+
+/* Right Window Card */
+.start-col-right .start-col-box {
+  background: rgba(9, 26, 32, 0.94) !important;
+  border: 2px solid rgba(137, 210, 186, 0.5) !important;
+  border-radius: 18px !important;
+  padding: 24px 28px !important;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 28px rgba(137, 210, 186, 0.12) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
+  backdrop-filter: blur(12px) !important;
+}
+
 .start-col-title {
-  font-size: 14px;
-  font-weight: 900;
-  color: var(--amber);
-  margin-bottom: 4px;
-  letter-spacing: 0.5px;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: var(--amber) !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.8px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
 }
-.start-bottom-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-top: 6px;
+.start-col-right .start-col-title {
+  color: #89d2ba !important;
 }
+
+.map-selector-hint {
+  font-size: 14px !important;
+  color: #c5ded5 !important;
+  margin: 0 0 14px 0 !important;
+}
+
+/* Spacious 2-Column County Pills */
+#county-pills {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 10px !important;
+  margin-bottom: 8px !important;
+}
+
+#county-pills .county-btn {
+  font-size: 15px !important;
+  padding: 12px 14px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 10px !important;
+  text-align: left !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #f1f5f4 !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  line-height: 1.25 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#county-pills .county-btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(239, 199, 134, 0.6) !important;
+  transform: translateY(-2px) !important;
+}
+
+#county-pills .county-btn.active {
+  background: linear-gradient(135deg, rgba(239, 199, 134, 0.32), rgba(239, 199, 134, 0.15)) !important;
+  border-color: #efc786 !important;
+  color: #fff7e0 !important;
+  box-shadow: 0 0 16px rgba(239, 199, 134, 0.3) !important;
+}
+
+#county-pills .county-btn small {
+  font-size: 12px !important;
+  color: #a7c5bc !important;
+  margin-top: 4px !important;
+  font-weight: 400 !important;
+}
+
+#selected-map-label {
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  color: #ffd894 !important;
+  background: rgba(239, 199, 134, 0.12) !important;
+  border: 1px solid rgba(239, 199, 134, 0.35) !important;
+  padding: 10px 14px !important;
+  border-radius: 8px !important;
+  margin: 8px 0 0 0 !important;
+}
+
+/* Spacious 2-Column Starter Vehicles */
+#starter-vehicle-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px !important;
+}
+
+#starter-vehicle-grid .starter-card {
+  padding: 14px 16px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1.5px solid rgba(232, 223, 192, 0.22) !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  text-align: left !important;
+}
+
+#starter-vehicle-grid .starter-card:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #89d2ba !important;
+  transform: translateY(-2px) !important;
+}
+
+#starter-vehicle-grid .starter-card.active {
+  background: rgba(137, 210, 186, 0.2) !important;
+  border-color: #89d2ba !important;
+  box-shadow: 0 0 20px rgba(137, 210, 186, 0.35) !important;
+}
+
+#starter-vehicle-grid .starter-card-icon {
+  font-size: 32px !important;
+  margin-bottom: 4px !important;
+}
+
+#starter-vehicle-grid .starter-card-name {
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  margin-bottom: 4px !important;
+}
+
+#starter-vehicle-grid .starter-card.active .starter-card-name {
+  color: #a4f4dc !important;
+}
+
+#starter-vehicle-grid .starter-card-desc {
+  font-size: 13px !important;
+  color: #bad3cb !important;
+  line-height: 1.4 !important;
+}
+
+#starter-vehicle-grid .starter-card.card-full-span {
+  grid-column: span 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+#starter-vehicle-grid .starter-card.card-full-span .starter-card-icon {
+  font-size: 38px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Launch Ready Prep Card */
+.launch-prep-card {
+  background: rgba(11, 34, 42, 0.65) !important;
+  border: 1px solid rgba(137, 210, 186, 0.3) !important;
+  border-radius: 12px !important;
+  padding: 14px 18px !important;
+  margin-bottom: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.prep-row {
+  display: flex !important;
+  align-items: center !important;
+  font-size: 14px !important;
+  color: #c9e4dc !important;
+  gap: 6px !important;
+}
+
+.prep-label {
+  font-weight: 700 !important;
+  color: #89d2ba !important;
+  white-space: nowrap !important;
+}
+
+/* Play Mode Selector & Mission Briefing (Page 2) */
+.play-mode-selector {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+.play-mode-selector button {
+  padding: 14px 16px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1.5px solid rgba(232, 223, 192, 0.25) !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  text-align: left !important;
+}
+
+.play-mode-selector button b {
+  font-size: 17px !important;
+  display: block !important;
+  margin-bottom: 4px !important;
+  color: #f7dcb0 !important;
+}
+
+.play-mode-selector button span {
+  font-size: 13px !important;
+  color: #bad3cb !important;
+  display: block !important;
+  line-height: 1.35 !important;
+}
+
+.play-mode-selector button[aria-pressed="true"] {
+  background: rgba(239, 199, 134, 0.22) !important;
+  border-color: #efc786 !important;
+  box-shadow: 0 0 18px rgba(239, 199, 134, 0.25) !important;
+}
+
+.mission-briefing {
+  font-size: 14px !important;
+  padding: 16px 20px !important;
+  background: rgba(11, 34, 42, 0.65) !important;
+  border: 1px solid rgba(232, 223, 192, 0.2) !important;
+  border-radius: 10px !important;
+  color: #e2ede7 !important;
+  line-height: 1.6 !important;
+}
+
+.mission-briefing p {
+  margin: 0 0 8px 0 !important;
+}
+
+.mission-briefing ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.mission-briefing li {
+  font-size: 13.5px !important;
+  margin-bottom: 4px !important;
+}
+
 .page2-config-pill {
-  padding: 8px 12px;
-  background: rgba(137, 210, 186, 0.12);
-  border: 1px solid rgba(137, 210, 186, 0.35);
-  border-radius: 6px;
-  color: #c8faeb;
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: 8px;
+  padding: 10px 16px !important;
+  background: rgba(137, 210, 186, 0.15) !important;
+  border: 1px solid rgba(137, 210, 186, 0.45) !important;
+  border-radius: 8px !important;
+  color: #c8faeb !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  margin-top: 12px !important;
 }
-.btn-primary-start { background: #efc786; color: #172e32; box-shadow: none; font-size: 17px; padding: 13px; border-radius: 6px; }
-.btn-primary-start:hover { background: #f7dcb0; box-shadow: 0 4px 14px #0002; }
+
+/* Primary Launch & Next Buttons */
+.btn-primary-start {
+  background: linear-gradient(135deg, #efc786 0%, #dfb064 100%) !important;
+  color: #12282c !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  border: none !important;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  box-shadow: 0 6px 20px rgba(239, 199, 134, 0.3) !important;
+  border-radius: 10px !important;
+}
+
+.btn-primary-start:hover {
+  background: linear-gradient(135deg, #f7dcb0 0%, #efc786 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 28px rgba(239, 199, 134, 0.5) !important;
+}
+
+.btn-secondary-multiplayer {
+  background: rgba(137, 210, 186, 0.15) !important;
+  color: #9fead2 !important;
+  border: 1.5px solid rgba(137, 210, 186, 0.5) !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-secondary-multiplayer:hover {
+  background: rgba(137, 210, 186, 0.3) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(137, 210, 186, 0.3) !important;
+}
 .combo-badge { font-size: 18px; background: #224d46; border: 1px solid var(--amber); border-radius: 6px; box-shadow: 0 5px 18px #0003; }
 .county-banner { top: 35%; }
 .county-banner-name { font-size: 32px; text-shadow: 0 2px 10px #000; color: #f6e7cb; }

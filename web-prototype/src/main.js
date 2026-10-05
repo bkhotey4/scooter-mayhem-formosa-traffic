@@ -422,6 +422,10 @@ class GameApp {
       if (summaryPill) {
         summaryPill.textContent = `📍 預定出發：${activeCounty} ｜ 🛵 ${activeVehicle}`;
       }
+      const launchVehEl = document.getElementById('launch-vehicle-name');
+      if (launchVehEl) {
+        launchVehEl.textContent = activeVehicle;
+      }
     };
 
     this.showStartStep = (step) => {

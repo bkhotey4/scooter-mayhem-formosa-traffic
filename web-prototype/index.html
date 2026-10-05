@@ -255,14 +255,16 @@
         </button>
       </nav>
 
-      <!-- Page 1: Left = Map Selector, Right = Scooter Selector -->
+      <!-- Page 1: Left = Map Selector Window, Right = Scooter Selector Window -->
       <div id="start-page-1" class="start-page-section">
         <div class="start-split-container">
-          <!-- Left Column: Map Selector -->
+          <!-- Left Window: Map Selector -->
           <section class="start-split-col start-col-left" aria-labelledby="map-selector-title">
             <div class="start-col-box">
-              <div class="start-col-title" id="map-selector-title">📍 第一步：選擇出發地圖</div>
-              <p class="map-selector-hint">選好地區特色與路況挑戰：</p>
+              <div class="start-col-header">
+                <div class="start-col-title" id="map-selector-title">📍 第一步：選擇出發地圖</div>
+                <p class="map-selector-hint">選定出發城市與路況挑戰：</p>
+              </div>
               <div class="county-pills" id="county-pills" role="group" aria-label="出發地區">
                 <button class="county-btn active" data-county="TAIPEI" aria-pressed="true">🏙️ 新北 / 台北<small>尖峰車流・導航挑戰</small></button>
                 <button class="county-btn" data-county="HSINCHU" aria-pressed="false">💨 新竹風城<small>強勁側風・平衡考驗</small></button>
@@ -271,16 +273,22 @@
                 <button class="county-btn" data-county="KAOHSIUNG" aria-pressed="false">⚓ 高雄港都<small>轉彎挑戰・濕滑軌道</small></button>
                 <button class="county-btn" data-county="KEELUNG" aria-pressed="false">🌧️ 基隆雨港<small>濕滑路面・提早煞車</small></button>
                 <button class="county-btn" data-county="YILAN" aria-pressed="false">⛰️ 宜蘭北宜<small>山道風情・壓車追焦</small></button>
+                <button class="county-btn" data-county="HUALIEN" aria-pressed="false">🌊 花蓮太魯閣<small>山海壯闊・彎道巡航</small></button>
               </div>
               <p id="selected-map-label" class="selected-map-label" aria-live="polite">已選：新北 / 台北</p>
+              <div class="start-col-footer" style="margin-top: 14px;">
+                <button id="btn-start-quit" class="return-menu-button btn-quit-danger" type="button" style="margin: 0; font-size: 15px; padding: 13px 18px;">🚪 離開遊戲 (關閉網頁)</button>
+              </div>
             </div>
           </section>
 
-          <!-- Right Column: Scooter Selector -->
+          <!-- Right Window: Scooter Selector -->
           <section class="start-split-col start-col-right" aria-labelledby="scooter-selector-title">
             <div class="start-col-box">
-              <div class="start-col-title" id="scooter-selector-title">🛵 第二步：挑選出發神車</div>
-              <p class="map-selector-hint">每輛車擁有專屬配重與操控性能：</p>
+              <div class="start-col-header">
+                <div class="start-col-title" id="scooter-selector-title">🛵 第二步：挑選出發神車</div>
+                <p class="map-selector-hint">每輛車擁有專屬配重與操控性能：</p>
+              </div>
               <div class="starter-vehicle-grid" id="starter-vehicle-grid">
                 <div class="starter-card active" data-vehicle="cygnus">
                   <div class="starter-card-icon">🛵</div>
@@ -302,36 +310,36 @@
                   <div class="starter-card-name">光陽 Many 110</div>
                   <div class="starter-card-desc">起步加速+40% ｜ 鑽車縫王者</div>
                 </div>
-                <div class="starter-card" data-vehicle="gas_tank">
+                <div class="starter-card card-full-span" data-vehicle="gas_tank">
                   <div class="starter-card-icon">🔥</div>
                   <div class="starter-card-name">阿公瓦斯車 (20kg雙桶)</div>
                   <div class="starter-card-desc">後座雙桶瓦斯 ｜ 氣閥噴射推進</div>
                 </div>
               </div>
+              <div class="start-col-footer" style="margin-top: 14px;">
+                <button id="btn-goto-page2" class="btn-primary-start" type="button" style="font-size: 18px; padding: 15px 24px; width: 100%;">下一步：選擇模式與出發 ➔</button>
+              </div>
             </div>
           </section>
         </div>
-
-        <!-- Page 1 Bottom Actions -->
-        <div class="start-bottom-actions">
-          <button id="btn-goto-page2" class="btn-primary-start" type="button" style="font-size: 16px; padding: 14px;">下一步：選擇模式與出發 ➔</button>
-          <button id="btn-start-quit" class="return-menu-button btn-quit-danger" type="button" style="margin: 4px 0 0; font-size: 13px;">🚪 離開遊戲 (關閉網頁)</button>
-        </div>
       </div>
 
-      <!-- Page 2: Left = Modes & Mission, Right = Launch & Multiplayer -->
+      <!-- Page 2: Left = Modes & Mission Window, Right = Launch & Multiplayer Window -->
       <div id="start-page-2" class="start-page-section hidden">
         <div class="start-split-container">
-          <!-- Left Column: Modes & Mission Briefing -->
+          <!-- Left Window: Modes & Mission Briefing -->
           <section class="start-split-col start-col-left" aria-labelledby="mode-selector-title">
             <div class="start-col-box">
-              <div class="start-col-title" id="mode-selector-title">🎮 選擇遊玩模式</div>
+              <div class="start-col-header">
+                <div class="start-col-title" id="mode-selector-title">🎮 選擇遊玩模式</div>
+                <p class="map-selector-hint">自選限時挑戰或輕鬆遊歷：</p>
+              </div>
               <div class="play-mode-selector" aria-label="選擇遊玩模式">
                 <button data-play-mode="delivery" aria-pressed="true"><b>外送挑戰</b><span>限時送單・多種貨物・賺取改裝費</span></button>
                 <button data-play-mode="practice" aria-pressed="false"><b>自由練車</b><span>無倒數・貨物保護・熟悉街道</span></button>
               </div>
 
-              <div class="mission-briefing" style="margin-bottom: 12px;">
+              <div class="mission-briefing">
                 <p><b>【外送派遣令】</b></p>
                 <p>穿過早餐街、燈籠夜市與老城，把後座的珍奶穩穩送達。</p>
                 <ul>
@@ -344,31 +352,40 @@
               <div id="page2-config-summary" class="page2-config-pill">
                 📍 預定出發：新北 / 台北 ｜ 🛵 勁戰四代 (125cc)
               </div>
+
+              <div class="start-col-footer" style="margin-top: 14px; display: grid; grid-template-columns: 1fr auto; gap: 12px;">
+                <button id="btn-goto-page1" class="return-menu-button" type="button" style="margin: 0; font-size: 15px; padding: 13px 16px; white-space: nowrap;">⬅ 上一步：重新挑選地圖與神車</button>
+                <button id="btn-start-quit-2" class="return-menu-button btn-quit-danger" type="button" style="margin: 0; font-size: 15px; padding: 13px 20px; white-space: nowrap;">🚪 離開遊戲</button>
+              </div>
             </div>
           </section>
 
-          <!-- Right Column: Start Game & Multiplayer Hub -->
+          <!-- Right Window: Start Game & Multiplayer Hub -->
           <section class="start-split-col start-col-right" aria-labelledby="launch-actions-title">
-            <div class="start-col-box" style="display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
+            <div class="start-col-box">
+              <div class="start-col-header">
                 <div class="start-col-title" id="launch-actions-title">🚀 準備就緒！發動狂飆</div>
                 <p class="map-selector-hint">戴好安全帽，油門催落去！</p>
-                <button id="btn-start-game" class="btn-primary-start" style="font-size: 19px; padding: 18px; margin-top: 10px;" type="button">🛵 發動引擎！開始狂飆！</button>
-                <button id="btn-open-multiplayer" class="btn-secondary-multiplayer" style="margin-top: 14px;" type="button">🌐 車友連線大廳 (方案 A / 方案 B)</button>
               </div>
 
-              <div style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(232, 223, 192, 0.15); padding-top: 14px;">
-                <a href="./showroom.html" target="_blank" rel="noopener" style="color: #efc786; text-decoration: none; font-size: 13px; font-weight: 700;">✨ 進入 3D 車輛展示室 ↗</a>
-                <div style="font-size: 11px; color: #89d2ba; margin-top: 6px;">支援換車快捷鍵 (V) ｜ 隨時按 Esc 暫停</div>
+              <!-- Ready Briefing Info Card -->
+              <div class="launch-prep-card">
+                <div class="prep-row"><span class="prep-label">🛵 出發神車：</span><b id="launch-vehicle-name">勁戰四代 (125cc) 運動底盤</b></div>
+                <div class="prep-row"><span class="prep-label">🛡️ 安全防護：</span><span>強化封口膜 100% ｜ 原廠穩定輔助</span></div>
+                <div class="prep-row"><span class="prep-label">🚦 交通執法：</span><span>小心未待轉科技執法 ＆ 違停車門突開</span></div>
+              </div>
+
+              <div class="launch-actions-body" style="display: flex; flex-direction: column; gap: 12px;">
+                <button id="btn-start-game" class="btn-primary-start" style="font-size: 22px; padding: 20px; width: 100%;" type="button">🛵 發動引擎！開始狂飆！</button>
+                <button id="btn-open-multiplayer" class="btn-secondary-multiplayer" style="font-size: 16px; padding: 14px; width: 100%;" type="button">🌐 車友連線大廳 (方案 A / 方案 B)</button>
+              </div>
+
+              <div class="start-col-footer" style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(232, 223, 192, 0.15); padding-top: 14px;">
+                <a href="./showroom.html" target="_blank" rel="noopener" style="color: #efc786; text-decoration: none; font-size: 14px; font-weight: 700;">✨ 進入 3D 車輛展示室 ↗</a>
+                <div style="font-size: 12px; color: #89d2ba; margin-top: 6px;">支援換車快捷鍵 (V) ｜ 隨時按 Esc 暫停 ｜ M 鍵查看全區地圖</div>
               </div>
             </div>
           </section>
-        </div>
-
-        <!-- Page 2 Bottom Actions -->
-        <div class="start-bottom-actions">
-          <button id="btn-goto-page1" class="return-menu-button" type="button" style="margin: 0; font-size: 14px;">⬅ 上一步：重新挑選地圖與神車</button>
-          <button id="btn-start-quit-2" class="return-menu-button btn-quit-danger" type="button" style="margin: 4px 0 0; font-size: 13px;">🚪 離開遊戲 (關閉網頁)</button>
         </div>
       </div>
     </div>

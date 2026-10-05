@@ -106,6 +106,21 @@ export const COUNTIES = {
     scooterSwarm: false,
     kaohsiungTurn: false,
     specialCargo: '正宗三星蔥油餅＋宜蘭牛舌餅'
+  },
+  HUALIEN: {
+    id: 'HUALIEN',
+    name: '花蓮太魯閣',
+    title: '【蘇花海風 ＆ 壯麗山海巡航】',
+    tagline: '「壯麗太平洋海風吹拂，避開砂石車與落石！」',
+    color: '#00e676',
+    desc: '山海壯闊景色，蘇花公路考驗避車與穩定巡航！',
+    sugarMultiplier: 1.0,
+    windStrength: 2.5,
+    roadFriction: 1.0,
+    radarGlitch: false,
+    scooterSwarm: false,
+    kaohsiungTurn: false,
+    specialCargo: '公正包子＋花蓮手工曾記麻糬'
   }
 };
 
