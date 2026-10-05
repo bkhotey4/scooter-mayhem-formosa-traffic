@@ -81,6 +81,13 @@
       </div>
     </div>
 
+    <!-- GTA-Style Wanted Stars Bar -->
+    <div id="wanted-badge" class="wanted-badge hidden">
+      <div class="wanted-title">WANTED · 警網通緝</div>
+      <div id="wanted-stars" class="wanted-stars">★★★★★</div>
+      <div id="wanted-sub" class="wanted-sub">警網高速攔截追逐中！</div>
+    </div>
+
     <div class="street-card">
       <div class="street-eyebrow">FORMOSA / 街區探索</div>
       <div id="district-name">民生早餐街</div>
@@ -176,6 +183,7 @@
       <!-- Quick Action Controls -->
       <div class="quick-controls">
         <button id="btn-horn" class="hud-btn btn-horn">📢 叭叭！(H)</button>
+        <button id="btn-hijack" class="hud-btn btn-hijack" style="border-color: #38bdf8; color: #38bdf8; font-weight: bold;">🚶 下車 (F)</button>
         <button id="btn-camera" class="hud-btn">🎥 視角 (C)</button>
         <button id="btn-weather" class="hud-btn btn-weather">🌅 逢甲黃昏 (T)</button>
         <button id="btn-toggle-touch" class="hud-btn btn-touch-toggle">📱 觸控鍵盤</button>
@@ -199,14 +207,26 @@
 
     <!-- Keybind Guide Pill -->
     <div class="keybind-pill">
-      <span><b>W / ↑</b> 加速</span>
+      <span><b>W / ↑</b> 加速／前進</span>
       <span><b>A D / ← →</b> 壓車轉彎</span>
-      <span><b>Shift / Q</b> 翹孤輪遮牌</span>
-      <span><b>空白鍵</b> 煞車</span>
-      <span><b>S / ↓</b> 減速／倒車</span>
-      <span><b>H</b> 按喇叭</span>
+      <span><b>F</b> 下車／搶車</span>
+      <span><b>Shift / Q</b> 翹孤輪／疾跑</span>
+      <span><b>空白鍵</b> 煞車／跳躍</span>
+      <span><b>S / ↓</b> 減速／倒退</span>
+      <span><b>H</b> 按喇叭／喊話</span>
       <span><b>V</b> 換車</span>
       <span><b>水溝蓋</b> 極限加速</span>
+    </div>
+
+    <!-- Floating Vehicle Hijack & Interact Prompt -->
+    <div id="vehicle-interact-prompt" class="vehicle-interact-prompt hidden">
+      <div class="prompt-key">F</div>
+      <div id="prompt-text" class="prompt-text">搶奪並駕駛 🚕 台灣小黃計程車</div>
+    </div>
+
+    <!-- Comic Meme Speech Bubble -->
+    <div id="speech-bubble" class="comic-speech-bubble hidden">
+      <span id="speech-text">🗯️ 叭三小啦！</span>
     </div>
   </div>
 
@@ -681,6 +701,34 @@
       </div>
       <div id="exit-close-tip" class="exit-close-tip" style="display: none;">
         ⚠️ 瀏覽器已安全攔截自動關閉，請直接按鍵盤 <kbd>Ctrl+W</kbd> 或點擊分頁上方 ✕ 離開！
+      </div>
+    </div>
+  </div>
+
+  <!-- NPC Story Quest Dialogue Modal -->
+  <div id="quest-dialog-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" style="z-index: 10040;">
+    <div class="modal-box quest-box">
+      <div class="quest-header">
+        <div class="quest-avatar-badge" id="quest-avatar">👨‍🦱</div>
+        <div class="quest-meta">
+          <div class="quest-giver-name" id="quest-npc-name">表哥阿明</div>
+          <div class="quest-giver-title" id="quest-npc-title">西門町改裝車行老手</div>
+        </div>
+      </div>
+      <div class="quest-dialogue-body" id="quest-dialogue-text">
+        「欸！表弟！這裡啦！你那台車改得很秋喔！剛剛那台發財車在前面被三寶卡住了，快幫我去重慶南路送這箱特級茶葉！限時 65 秒，小費算你 $1200！」
+      </div>
+      <div class="quest-reward-strip">
+        <span>🏆 委託獎勵：</span>
+        <span class="quest-reward-val" id="quest-reward-val">現金 $1200 ＋ 滿格氮氣瓶</span>
+      </div>
+      <div class="quest-actions">
+        <button id="btn-accept-quest" class="btn-primary-start" type="button" style="background: linear-gradient(135deg, #10b981, #059669); margin: 0; padding: 14px 20px; font-size: 16px;">
+          🤙 沒問題，交給我！
+        </button>
+        <button id="btn-decline-quest" class="return-menu-button" type="button" style="margin: 0; padding: 12px 18px; font-size: 14px;">
+          👋 先不要，等等再來
+        </button>
       </div>
     </div>
   </div>

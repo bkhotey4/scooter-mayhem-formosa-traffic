@@ -15,6 +15,7 @@ import { TimeWeatherSystem } from './game/TimeWeatherSystem.js';
 import { ArtDirection } from './game/ArtDirection.js';
 import { StreetLife } from './city/StreetLife.js';
 import { NetworkManager } from './network/NetworkManager.js';
+import { TaiwanSandboxSystem } from './game/TaiwanSandboxSystem.js';
 import { cameraProfile, isTypingTarget } from './game/RideFeedback.js';
 
 class GameApp {
@@ -393,6 +394,16 @@ class GameApp {
     this.network.onToastMessage = (msg) => {
       this.showFineToast(msg);
     };
+
+    // 11. Taiwan GTA Sandbox System (On-Foot Mode, Car Hijacking, Story Quests & Meme Horn)
+    this.taiwanSandbox = new TaiwanSandboxSystem(
+      this.scene,
+      this.factory,
+      this.sound,
+      this.controller,
+      this.traffic,
+      this.gameMode
+    );
   }
 
   setupUIEvents() {
@@ -565,7 +576,7 @@ class GameApp {
 
     this.ui.btnHorn.addEventListener('click', () => {
       this.sound.init();
-      this.sound.playHorn();
+      this.taiwanSandbox?.triggerMemeHorn();
       this.network?.broadcastHorn();
     });
 
@@ -637,6 +648,21 @@ class GameApp {
       }
       if (e.key.toLowerCase() === 'r') {
         this.controller.reset(0, this.controller.position.z, Math.cos(this.controller.heading) >= 0 ? 0 : Math.PI);
+      }
+      if (e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        this.taiwanSandbox?.handleHijackOrDismount();
+      }
+      if (e.key.toLowerCase() === 'h') {
+        e.preventDefault();
+        this.taiwanSandbox?.triggerMemeHorn();
+      }
+      if (e.key.toLowerCase() === 'e') {
+        const nearbyQuest = this.taiwanSandbox?.quests.find(q => q.pos.distanceTo(this.controller.position) < 4.0);
+        if (nearbyQuest) {
+          e.preventDefault();
+          this.taiwanSandbox.openQuestModal(nearbyQuest);
+        }
       }
     });
 
@@ -1418,6 +1444,9 @@ class GameApp {
 
       // 4. Game Mission Loop
       this.gameMode.update(dt, this.controller.position, this.controller.speed);
+
+      // 4.5. Taiwan GTA Sandbox System (On-Foot, Quests, Hijacking, Wanted & Speech)
+      this.taiwanSandbox?.update(dt, this.controller.keys);
 
       // 5. Camera Follow
       this.updateCamera(dt);
