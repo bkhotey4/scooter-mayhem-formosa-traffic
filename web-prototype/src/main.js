@@ -94,6 +94,12 @@ class GameApp {
       btnCloseShop: document.getElementById('btn-close-shop'),
       btnMute: document.getElementById('btn-mute'),
       btnReset: document.getElementById('btn-reset'),
+      btnHudQuit: document.getElementById('btn-hud-quit'),
+      btnReturnMenu: document.getElementById('btn-return-menu'),
+      btnQuitGame: document.getElementById('btn-quit-game'),
+      btnSummaryQuit: document.getElementById('btn-summary-quit'),
+      btnGameoverQuit: document.getElementById('btn-gameover-quit'),
+      btnStartQuit: document.getElementById('btn-start-quit'),
       visorOverlay: document.getElementById('visor-overlay'),
       speedlinesOverlay: document.getElementById('speedlines-overlay'),
       wiperArm: document.getElementById('wiper-arm'),
@@ -392,15 +398,14 @@ class GameApp {
         this.ui.btnStart.textContent = this.selectedMode === 'practice' ? '🛵 出發！自由練車' : '🛵 發動引擎！開始狂飆！';
       });
     });
-    document.getElementById('btn-pause').addEventListener('click', () => this.setPaused(true));
-    document.getElementById('btn-resume').addEventListener('click', () => this.setPaused(false));
-    document.getElementById('btn-return-menu').addEventListener('click', () => {
-      this.running = false;
-      this.setPaused(false);
-      this.gameMode.state = 'START';
-      this.ui.startModal.classList.remove('hidden');
-      this.sound.stopBGM();
-    });
+    document.getElementById('btn-pause')?.addEventListener('click', () => this.setPaused(true));
+    document.getElementById('btn-resume')?.addEventListener('click', () => this.setPaused(false));
+    this.ui.btnHudQuit?.addEventListener('click', () => this.setPaused(true));
+    this.ui.btnReturnMenu?.addEventListener('click', () => this.returnToMainMenu());
+    this.ui.btnQuitGame?.addEventListener('click', () => this.quitGame());
+    this.ui.btnSummaryQuit?.addEventListener('click', () => this.returnToMainMenu());
+    this.ui.btnGameoverQuit?.addEventListener('click', () => this.returnToMainMenu());
+    this.ui.btnStartQuit?.addEventListener('click', () => this.quitGame());
     window.addEventListener('blur', () => { if (this.running) this.setPaused(true); });
     document.addEventListener('visibilitychange', () => { if (document.hidden && this.running) this.setPaused(true); });
     // 1. Mobile & Touch Screen Auto-Detection
@@ -458,6 +463,8 @@ class GameApp {
           this.network?.broadcastHorn();
         } else if (act === 'vehicle') {
           this.cycleVehicle();
+        } else if (act === 'pause') {
+          this.setPaused(true);
         }
         setTimeout(() => button.classList.remove('active'), 180);
       };
@@ -632,6 +639,31 @@ class GameApp {
     document.querySelectorAll('.touch-btn.active').forEach(b => b.classList.remove('active'));
     document.getElementById('pause-modal').classList.toggle('hidden', !paused);
     if (paused) this.sound.updateEngine(0, false);
+  }
+
+  returnToMainMenu() {
+    this.running = false;
+    this.setPaused(false);
+    this.gameMode.state = 'START';
+    this.ui.startModal?.classList.remove('hidden');
+    this.ui.summaryModal?.classList.add('hidden');
+    this.ui.gameoverModal?.classList.add('hidden');
+    if (this.ui.shopModal) this.ui.shopModal.classList.add('hidden');
+    if (this.ui.mpModal) this.ui.mpModal.classList.add('hidden');
+    this.sound.stopBGM();
+    this.sound.updateEngine(0, false);
+    if (this.cityData?.bobaShop) {
+      this.controller.reset(this.cityData.bobaShop.x, this.cityData.bobaShop.z, 0);
+    }
+    this.updateHUD();
+  }
+
+  quitGame() {
+    this.returnToMainMenu();
+    this.showComboPopup('🛵 感謝遊玩！若想結束，請直接關閉瀏覽器分頁。', 4500);
+    try {
+      window.close();
+    } catch (_) {}
   }
 
   toggleCamera() {

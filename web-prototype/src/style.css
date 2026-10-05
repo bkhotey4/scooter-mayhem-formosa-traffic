@@ -1390,7 +1390,13 @@ body {
 .pause-box h2 { color: #f6e7cb; margin: 10px 0; }
 .pause-box p, .pause-box small { font-size: 12px; color: #bacfc5; }
 .pause-help { padding: 18px; margin: 20px 0; background: #0b222a66; border-radius: 8px; line-height: 2; font-size: 13px; color: #e0e9e1; }
-.return-menu-button { background: none; border: 1px solid #e8dfc038; padding: 11px; color: #dfd8c2; border-radius: 6px; margin: 12px 0; width: 100%; cursor: pointer; font: inherit; font-size: 12px; }
+.return-menu-button { background: none; border: 1px solid #e8dfc038; padding: 11px; color: #dfd8c2; border-radius: 6px; margin: 8px 0; width: 100%; cursor: pointer; font: inherit; font-size: 13px; font-weight: 500; transition: all 0.15s ease; }
+.return-menu-button:hover { background: rgba(255, 255, 255, 0.08); border-color: #efc786; color: #ffffff; }
+.btn-quit-danger { background: rgba(229, 57, 53, 0.16) !important; border-color: rgba(229, 57, 53, 0.55) !important; color: #ff8a80 !important; font-weight: 700; }
+.btn-quit-danger:hover { background: rgba(229, 57, 53, 0.38) !important; border-color: #ff5252 !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(229, 57, 53, 0.35); }
+.hud-btn.btn-quit { color: #ffab91; border-color: rgba(255, 112, 67, 0.45); }
+.hud-btn.btn-quit:hover { background: rgba(255, 87, 34, 0.25); color: #ffffff; border-color: #ff7043; }
+.touch-action-mini.touch-pause { background: #263238; color: #eceff1; border-color: #78909c; }
 body { font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; }
 .hud-card { background: rgba(17, 35, 39, .91); border: 1px solid #e8dfc02b; box-shadow: 0 5px 20px #081b2329; border-radius: 8px; backdrop-filter: none; }
 .mission-card { border-left: 3px solid var(--jade); max-width: 375px; }

@@ -15,7 +15,7 @@
   <div id="canvas-container"></div>
   <button id="btn-handling" class="handling-button" aria-pressed="true" title="穩定輔助：柔和起步、高速轉向減敏、最高約56km/h；切換街機挑戰可恢復高速。">操控：穩定輔助</button>
   <button id="btn-hud-mp" class="handling-button" style="right: 172px;" title="車友多人連線大廳">🌐 車友連線</button>
-  <button id="btn-pause" class="pause-button" title="Esc 暫停">Ⅱ 暫停</button>
+  <button id="btn-pause" class="pause-button" title="Esc 暫停與選單">⏸️ 暫停／選單 (Esc)</button>
 
   <!-- Visor Water Droplets Overlay (冷氣滴水畫面) -->
   <div id="visor-overlay" class="visor-overlay">
@@ -171,6 +171,7 @@
         <button id="btn-shop" class="hud-btn btn-shop">🏪 車行改裝</button>
         <button id="btn-mute" class="hud-btn">🔊 聲音</button>
         <button id="btn-reset" class="hud-btn">🔄 重生 (R)</button>
+        <button id="btn-hud-quit" class="hud-btn btn-quit" title="暫停並離開遊戲 (Esc)">🚪 離開 (Esc)</button>
       </div>
     </div>
 
@@ -212,6 +213,7 @@
     <!-- Right Cluster: Gas, Brake/Drift, Wheelie, Horn, Switch -->
     <div class="touch-cluster touch-right-cluster">
       <div class="touch-actions-subrow">
+        <button class="touch-btn touch-action-mini touch-pause" data-action="pause" aria-label="暫停與選單">⏸️ 選單</button>
         <button class="touch-btn touch-action-mini touch-horn" data-action="horn" aria-label="按喇叭">📢 叭叭</button>
         <button class="touch-btn touch-action-mini touch-wheelie" data-drive-key="q" aria-label="神之翹孤輪遮牌">⚡ 翹孤輪</button>
         <button class="touch-btn touch-action-mini touch-vehicle" data-action="vehicle" aria-label="快速切換神車">🛵 換車</button>
@@ -293,6 +295,7 @@
       </div>
       <button id="btn-start-game" class="btn-primary-start">🛵 發動引擎！開始狂飆！</button>
       <button id="btn-open-multiplayer" class="btn-secondary-multiplayer">🌐 車友連線大廳 (方案 A / 方案 B)</button>
+      <button id="btn-start-quit" class="return-menu-button btn-quit-danger" style="margin-top: 8px; font-size: 13px;">🚪 離開遊戲 (關閉網頁)</button>
       <div class="credit-tag"><a href="./showroom.html" target="_blank" rel="noopener" style="color:#efc786">進入車輛展示室 ↗</a> ｜ 換車快捷鍵 (V) ｜ Esc 暫停</div>
     </div>
   </div>
@@ -342,6 +345,7 @@
       </div>
 
       <button id="btn-next-order" class="btn-primary-start">📦 接下一單！(時間加成 +35秒)</button>
+      <button id="btn-summary-quit" class="return-menu-button" style="margin-top: 8px;">🏠 結束今日外送，返回主畫面</button>
     </div>
   </div>
 
@@ -363,6 +367,7 @@
       </div>
 
       <button id="btn-retry" class="btn-primary-start">🔄 重新挑戰！</button>
+      <button id="btn-gameover-quit" class="return-menu-button" style="margin-top: 8px;">🏠 結束挑戰，返回主選單</button>
     </div>
   </div>
 
@@ -426,9 +431,10 @@
       <p>車輛、倒數與貨物狀態已暫停。</p>
       <div class="pause-help">W / ↑ 油門　A D / ← → 轉向<br>空白鍵煞車　S / ↓ 停穩後倒車<br>R 回到道路中央　C 切換視角</div>
       <button id="btn-camera-motion" class="return-menu-button" aria-pressed="true">鏡頭：舒適 · 固定視野、不晃動</button>
-      <button id="btn-resume" class="btn-primary-start">繼續騎車 · Esc</button>
+      <button id="btn-resume" class="btn-primary-start">▶️ 繼續騎車 · Esc</button>
       <button id="btn-pause-mp" class="btn-secondary-multiplayer" style="margin-top: 8px;">🌐 車友連線大廳</button>
-      <button id="btn-return-menu" class="return-menu-button">回到出發畫面 · 換地圖／模式</button>
+      <button id="btn-return-menu" class="return-menu-button">🏠 返回出發主選單（換車／換地圖）</button>
+      <button id="btn-quit-game" class="return-menu-button btn-quit-danger">🚪 結束遊玩並離開遊戲</button>
       <small>重新出發會重置當前訂單與美食集章，探索紀念章會保存；保留本次開啟遊戲的收益與改裝。</small>
     </div>
   </div>

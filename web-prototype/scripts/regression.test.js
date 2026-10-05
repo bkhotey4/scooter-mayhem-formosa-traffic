@@ -334,3 +334,38 @@ test('blocked storage and malformed saves preserve playable exploration', () => 
   assert.ok(progress.visit(LANDMARKS[0]));
   for (const value of ['null', '{}', 'broken']) assert.equal(new ExplorationProgress({ getItem: () => value }).visited.size, 0);
 });
+
+test('returnToMainMenu resets active delivery, pauses state and restores start modal', () => {
+  const game = new GameMode();
+  game.startDelivery('delivery');
+  assert.equal(game.state, 'DELIVERING');
+
+  const appMock = {
+    running: true,
+    paused: true,
+    gameMode: game,
+    ui: {
+      startModal: { classList: { remove() { this.hidden = false; }, hidden: true } },
+      summaryModal: { classList: { add() { this.hidden = true; }, hidden: false } },
+      gameoverModal: { classList: { add() { this.hidden = true; }, hidden: false } }
+    },
+    sound: { stopBGM() { this.bgm = false; }, updateEngine() {} },
+    returnToMainMenu() {
+      this.running = false;
+      this.paused = false;
+      this.gameMode.state = 'START';
+      this.ui.startModal.classList.remove('hidden');
+      this.ui.summaryModal.classList.add('hidden');
+      this.ui.gameoverModal.classList.add('hidden');
+      this.sound.stopBGM();
+    }
+  };
+
+  appMock.returnToMainMenu();
+  assert.equal(appMock.running, false);
+  assert.equal(appMock.paused, false);
+  assert.equal(appMock.gameMode.state, 'START');
+  assert.equal(appMock.ui.startModal.classList.hidden, false);
+  assert.equal(appMock.ui.summaryModal.classList.hidden, true);
+  assert.equal(appMock.ui.gameoverModal.classList.hidden, true);
+});
