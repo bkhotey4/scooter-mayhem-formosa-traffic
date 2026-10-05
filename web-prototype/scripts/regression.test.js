@@ -224,12 +224,31 @@ test('delivery guidance distinguishes approach, braking, handoff and practice', 
   game.startDelivery('practice'); assert.equal(game.getDeliveryGuidance(target, 0, 0), '');
 });
 
-test('left steering leans the rider into the turn and collisions allow recovery', () => {
-  const c = controller(); c.keys.w = true; c.keys.a = true; step(c, 1);
-  assert.ok(c.heading < 0); assert.ok(c.rollAngle > 0, 'positive local-Z roll leans left');
-  c.triggerCrash(); step(c, 0.85);
-  assert.equal(c.isCrashed, false);
-  c.triggerCrash(); assert.equal(c.isCrashed, false, 'brief recovery grace prevents collision stunlock');
+test('left and right steering keys (A/D and Arrows) steer and lean accurately', () => {
+  // A / ArrowLeft -> steer left, heading < 0, rollAngle > 0
+  const cLeft = controller(); cLeft.keys.w = true; cLeft.keys.a = true; step(cLeft, 1);
+  assert.ok(cLeft.heading < 0, 'A key must steer left (heading < 0)');
+  assert.ok(cLeft.rollAngle > 0, 'A key must lean rider left into turn (rollAngle > 0)');
+
+  const cArrowL = controller(); cArrowL.keys.w = true; cArrowL.keys.arrowleft = true; step(cArrowL, 1);
+  assert.ok(cArrowL.heading < 0, 'ArrowLeft must steer left');
+
+  // D / ArrowRight -> steer right, heading > 0, rollAngle < 0
+  const cRight = controller(); cRight.keys.w = true; cRight.keys.d = true; step(cRight, 1);
+  assert.ok(cRight.heading > 0, 'D key must steer right (heading > 0)');
+  assert.ok(cRight.rollAngle < 0, 'D key must lean rider right into turn (rollAngle < 0)');
+
+  const cArrowR = controller(); cArrowR.keys.w = true; cArrowR.keys.arrowright = true; step(cArrowR, 1);
+  assert.ok(cArrowR.heading > 0, 'ArrowRight must steer right');
+
+  // Simultaneous A + D cancels out
+  const cBoth = controller(); cBoth.keys.w = true; cBoth.keys.a = true; cBoth.keys.d = true; step(cBoth, 1);
+  assert.equal(cBoth.heading, 0, 'Simultaneous A and D should cancel out');
+
+  // Collision recovery grace
+  cLeft.triggerCrash(); step(cLeft, 0.85);
+  assert.equal(cLeft.isCrashed, false);
+  cLeft.triggerCrash(); assert.equal(cLeft.isCrashed, false, 'brief recovery grace prevents collision stunlock');
 });
 
 test('lofted vehicle shells have outward side normals and finite geometry', () => {

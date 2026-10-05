@@ -351,7 +351,7 @@ export class ScooterController {
 
     let steer = 0;
     if (this.keys['a'] || this.keys['arrowleft']) steer += 1;
-    if (this.keys['d'] || this.keys['arrowright']) steer += 1;
+    if (this.keys['d'] || this.keys['arrowright']) steer -= 1;
 
     const brake = !!this.keys[' '];
     const comfort = this.handlingMode === 'comfort';
