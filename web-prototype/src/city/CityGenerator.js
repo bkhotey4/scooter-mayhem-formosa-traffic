@@ -24,6 +24,7 @@ export class CityGenerator {
   generateCity() {
     const existing = new Set(this.scene.children);
     this.createGroundAndRoads();
+    this.createNorthGateMonument();
     this.createRoadPatchesAndBumps();
     this.createBuildings();
     this.createStreetFacilities();
@@ -52,7 +53,7 @@ export class CityGenerator {
 
   createGroundAndRoads() {
     // 1. Asphalt Ground
-    const groundGeo = new THREE.PlaneGeometry(160, 420);
+    const groundGeo = new THREE.PlaneGeometry(330, 570);
     groundGeo.rotateX(-Math.PI / 2);
     const ground = new THREE.Mesh(groundGeo, this.factory.materials.asphalt);
     ground.receiveShadow = true;
@@ -62,12 +63,14 @@ export class CityGenerator {
     const whiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const redMat = new THREE.MeshBasicMaterial({ color: 0xd50000 });
 
-    // 2. Main Avenue Block Segments (4 block segments avoiding 3 cross-street intersections)
+    // 2. Main Avenue Block Segments (Avoiding 5 cross-street intersections: -230, -115, 0, 115, 230)
     const mainBlockSegs = [
-      { len: 74, centerZ: -135 },
-      { len: 74, centerZ: -45 },
-      { len: 74, centerZ: 45 },
-      { len: 74, centerZ: 135 }
+      { len: 26, centerZ: -250 },
+      { len: 94, centerZ: -172.5 },
+      { len: 94, centerZ: -57.5 },
+      { len: 94, centerZ: 57.5 },
+      { len: 94, centerZ: 172.5 },
+      { len: 26, centerZ: 250 }
     ];
 
     mainBlockSegs.forEach(seg => {
@@ -109,8 +112,8 @@ export class CityGenerator {
     });
 
     // 3. Road Metal Gutter Covers (水溝蓋) along Main Avenue & Side Alleys
-    for (let z = -170; z <= 170; z += 18) {
-      if (Math.abs(z - (-90)) < 12 || Math.abs(z - 0) < 12 || Math.abs(z - 90) < 12) continue;
+    for (let z = -220; z <= 220; z += 18) {
+      if ([-230, -115, 0, 115, 230].some(cz => Math.abs(z - cz) < 14)) continue;
       // Main Avenue Gutters
       [-6.1, 6.1].forEach(x => {
         const gutter = this.factory.createGutterCover(12);
@@ -132,41 +135,53 @@ export class CityGenerator {
       this.gutterPositions.push({ x: 34.8, z, length: 12 });
     }
 
-    // 4. Three Cross Streets (東西向橫向大道 / 北門路、中正路、逢甲路)
-    const intersectionsZ = [-90, 0, 90];
+    // 4. Five Cross Streets (東西向橫向大道 / 北門圓環大道、南京西路、中正大道、和平西路、南環大道)
+    const intersectionsZ = [-230, -115, 0, 115, 230];
     intersectionsZ.forEach(z => {
-      // Cross Street Double Yellow Lines along Z = z
+      // Cross Street Double Yellow Lines along Z = z, running between vertical avenues
       [-0.15, 0.15].forEach(dz => {
-        // West cross branch (X: -34 to -6.5, len: 27.5, centerX: -20.25)
-        const westYGeo = new THREE.PlaneGeometry(27.5, 0.12);
-        westYGeo.rotateX(-Math.PI / 2);
-        const westY = new THREE.Mesh(westYGeo, yellowMat);
-        westY.position.set(-20.25, 0.02, z + dz);
-        this.scene.add(westY);
-
-        // East cross branch (X: 6.5 to 34, len: 27.5, centerX: 20.25)
-        const eastYGeo = new THREE.PlaneGeometry(27.5, 0.12);
-        eastYGeo.rotateX(-Math.PI / 2);
-        const eastY = new THREE.Mesh(eastYGeo, yellowMat);
-        eastY.position.set(20.25, 0.02, z + dz);
-        this.scene.add(eastY);
+        [
+          { startX: -120, endX: -68 },
+          { startX: -62, endX: -35 },
+          { startX: -29, endX: -6.5 },
+          { startX: 6.5, endX: 29 },
+          { startX: 35, endX: 62 },
+          { startX: 68, endX: 120 }
+        ].forEach(span => {
+          const spanLen = span.endX - span.startX;
+          const spanCenter = (span.startX + span.endX) / 2;
+          const yGeo = new THREE.PlaneGeometry(spanLen, 0.12);
+          yGeo.rotateX(-Math.PI / 2);
+          const yMesh = new THREE.Mesh(yGeo, yellowMat);
+          yMesh.position.set(spanCenter, 0.02, z + dz);
+          this.scene.add(yMesh);
+        });
       });
 
       // Cross Street White Border Lines
       [-4.6, 4.6].forEach(dz => {
-        [-20.25, 20.25].forEach(cx => {
-          const wLineGeo = new THREE.PlaneGeometry(27.5, 0.15);
-          wLineGeo.rotateX(-Math.PI / 2);
-          const wLine = new THREE.Mesh(wLineGeo, whiteMat);
-          wLine.position.set(cx, 0.02, z + dz);
-          this.scene.add(wLine);
+        [
+          { startX: -120, endX: -68 },
+          { startX: -62, endX: -35 },
+          { startX: -29, endX: -6.5 },
+          { startX: 6.5, endX: 29 },
+          { startX: 35, endX: 62 },
+          { startX: 68, endX: 120 }
+        ].forEach(span => {
+          const spanLen = span.endX - span.startX;
+          const spanCenter = (span.startX + span.endX) / 2;
+          const wGeo = new THREE.PlaneGeometry(spanLen, 0.15);
+          wGeo.rotateX(-Math.PI / 2);
+          const wMesh = new THREE.Mesh(wGeo, whiteMat);
+          wMesh.position.set(spanCenter, 0.02, z + dz);
+          this.scene.add(wMesh);
         });
       });
 
-      // Cross Street Sidewalks (North & South of cross streets, leaving alleys and main street open)
+      // Cross Street Sidewalks (North & South of cross streets, leaving avenues open)
       [-6.5, 6.5].forEach(dz => {
-        [-19.0, 19.0].forEach(cx => {
-          const cSwGeo = new THREE.BoxGeometry(16.0, 0.25, 2.6);
+        [-20.0, 20.0].forEach(cx => {
+          const cSwGeo = new THREE.BoxGeometry(14.0, 0.25, 2.6);
           const cSw = new THREE.Mesh(cSwGeo, this.factory.materials.sidewalk);
           cSw.position.set(cx, 0.12, z + dz);
           cSw.receiveShadow = true;
@@ -211,7 +226,7 @@ export class CityGenerator {
       this.scene.add(box2);
 
       // 4.1. Transverse Deceleration Stripes (橫向減速標線)
-      [-22, 22].forEach(offsetZ => {
+      [-18, 18].forEach(offsetZ => {
         const decelCenterZ = z + offsetZ;
         for (let s = -2.2; s <= 2.2; s += 1.1) {
           const decelGeo = new THREE.PlaneGeometry(10.2, 0.22);
@@ -229,11 +244,11 @@ export class CityGenerator {
       );
     });
 
-    // 5. Parallel Alleys Decor & Markings (南北向平行街巷捷徑網)
-    // 5.1 West Alley (西側文青老街 / 防火巷捷徑 - X = -32)
+    // 5. Parallel Alleys Decor & Markings
+    // 5.1 West Alley (X = -32)
     [-35.0, -29.0].forEach(ax => {
-      for (let az = -155; az <= 155; az += 6) {
-        if (Math.abs(az - (-90)) < 8 || Math.abs(az - 0) < 8 || Math.abs(az - 90) < 8) continue;
+      for (let az = -215; az <= 215; az += 6) {
+        if ([-230, -115, 0, 115, 230].some(cz => Math.abs(az - cz) < 9)) continue;
         const dashGeo = new THREE.PlaneGeometry(0.12, 3.2);
         dashGeo.rotateX(-Math.PI / 2);
         const dash = new THREE.Mesh(dashGeo, whiteMat);
@@ -242,10 +257,10 @@ export class CityGenerator {
       }
     });
 
-    // 5.2 East Alley (東側夜市美食後巷 - X = 32)
+    // 5.2 East Alley (X = 32)
     [-35.0, -29.0].forEach(ax => {
-      for (let az = -155; az <= 155; az += 6) {
-        if (Math.abs(az - (-90)) < 8 || Math.abs(az - 0) < 8 || Math.abs(az - 90) < 8) continue;
+      for (let az = -215; az <= 215; az += 6) {
+        if ([-230, -115, 0, 115, 230].some(cz => Math.abs(az - cz) < 9)) continue;
         const dashGeo = new THREE.PlaneGeometry(0.12, 3.2);
         dashGeo.rotateX(-Math.PI / 2);
         const dash = new THREE.Mesh(dashGeo, whiteMat);
@@ -261,8 +276,8 @@ export class CityGenerator {
       emissiveIntensity: 0.6,
       roughness: 0.3
     });
-    for (let lz = -140; lz <= 140; lz += 16) {
-      if (Math.abs(lz - (-90)) < 12 || Math.abs(lz - 0) < 12 || Math.abs(lz - 90) < 12) continue;
+    for (let lz = -200; lz <= 200; lz += 16) {
+      if ([-230, -115, 0, 115, 230].some(cz => Math.abs(lz - cz) < 12)) continue;
       const wireCurve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(28.8, 5.2, lz),
         new THREE.Vector3(32.0, 4.6, lz),
@@ -282,85 +297,220 @@ export class CityGenerator {
     }
   }
 
+  // Historic Landmark: North Gate (台北府城北門・承恩門) Roundabout Monument
+  createNorthGateMonument() {
+    const gateGroup = new THREE.Group();
+    gateGroup.position.set(0, 0, -230);
+
+    // 1. Roundabout circular curb plaza (圓環安全島)
+    const islandGeo = new THREE.CylinderGeometry(7.5, 7.5, 0.35, 32);
+    const islandMat = new THREE.MeshStandardMaterial({ color: 0x5a6358, roughness: 0.8 });
+    const island = new THREE.Mesh(islandGeo, islandMat);
+    island.position.y = 0.17;
+    gateGroup.add(island);
+
+    // Roundabout lush lawn
+    const lawnGeo = new THREE.CylinderGeometry(7.0, 7.0, 0.38, 32);
+    const lawnMat = new THREE.MeshStandardMaterial({ color: 0x486b45, roughness: 0.9 });
+    const lawn = new THREE.Mesh(lawnGeo, lawnMat);
+    lawn.position.y = 0.2;
+    gateGroup.add(lawn);
+
+    // 2. Fortress Stone Base (台北府城北門・紅磚城台)
+    const fortressMat = new THREE.MeshStandardMaterial({ color: 0x8b3a32, roughness: 0.85 });
+    
+    // Left & Right solid abutments leaving center archway open (X: -1.7 to 1.7)
+    const abutmentGeo = new THREE.BoxGeometry(2.8, 3.2, 6.2);
+    const leftAbutment = new THREE.Mesh(abutmentGeo, fortressMat);
+    leftAbutment.position.set(-3.1, 1.8, 0);
+    gateGroup.add(leftAbutment);
+
+    const rightAbutment = leftAbutment.clone();
+    rightAbutment.position.set(3.1, 1.8, 0);
+    gateGroup.add(rightAbutment);
+
+    // Arch header beam over the tunnel
+    const archTopGeo = new THREE.BoxGeometry(3.6, 0.7, 6.2);
+    const archTop = new THREE.Mesh(archTopGeo, fortressMat);
+    archTop.position.set(0, 3.05, 0);
+    gateGroup.add(archTop);
+
+    // 3. Second Floor Wooden Pavilion (木造城樓)
+    const pavilionWallMat = new THREE.MeshStandardMaterial({ color: 0xa83a2a, roughness: 0.7 });
+    const pavilionGeo = new THREE.BoxGeometry(8.2, 1.8, 5.4);
+    const pavilion = new THREE.Mesh(pavilionGeo, pavilionWallMat);
+    pavilion.position.set(0, 4.3, 0);
+    gateGroup.add(pavilion);
+
+    // Traditional lattice window accents (木質格扇窗)
+    const latticeMat = new THREE.MeshStandardMaterial({ color: 0x2e1810, roughness: 0.6 });
+    [-2.2, 0, 2.2].forEach(wx => {
+      [-2.72, 2.72].forEach(wz => {
+        const win = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.9, 0.08), latticeMat);
+        win.position.set(wx, 4.3, wz);
+        gateGroup.add(win);
+      });
+    });
+
+    // 4. Swallowtail / Hip-and-Gable Roof (傳統閩南式燕尾翹脊屋頂)
+    const roofMat = new THREE.MeshStandardMaterial({ color: 0x2f3e3a, roughness: 0.5 });
+    
+    // Lower eaves
+    const lowerEavesGeo = new THREE.ConeGeometry(6.6, 1.4, 4);
+    lowerEavesGeo.rotateY(Math.PI / 4);
+    const lowerEaves = new THREE.Mesh(lowerEavesGeo, roofMat);
+    lowerEaves.position.set(0, 5.6, 0);
+    lowerEaves.scale.set(1.4, 0.7, 1.0);
+    gateGroup.add(lowerEaves);
+
+    // Upper ridge & ridge ornament (燕尾正脊)
+    const ridgeGeo = new THREE.BoxGeometry(9.6, 0.35, 0.5);
+    const ridge = new THREE.Mesh(ridgeGeo, roofMat);
+    ridge.position.set(0, 6.2, 0);
+    gateGroup.add(ridge);
+
+    // Swallowtail flared tips (燕尾翹脊)
+    [-4.8, 4.8].forEach(rx => {
+      const tipGeo = new THREE.ConeGeometry(0.35, 0.8, 4);
+      const tip = new THREE.Mesh(tipGeo, roofMat);
+      tip.position.set(rx, 6.4, 0);
+      tip.rotation.z = rx < 0 ? -0.4 : 0.4;
+      gateGroup.add(tip);
+    });
+
+    // 5. Plaque "承恩門" and "北門" (門額石匾)
+    const plaqueMat = new THREE.MeshStandardMaterial({ color: 0xd8caa5, roughness: 0.6 });
+    [-3.12, 3.12].forEach((pz, pIdx) => {
+      const plaque = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.65, 0.12), plaqueMat);
+      plaque.position.set(0, 2.85, pz);
+      gateGroup.add(plaque);
+      const plaqueText = this.factory.createTextTexture(pIdx === 0 ? '北門' : '承恩門', '#222222', '#d8caa5', 28);
+      const plaqueMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.9, 0.55),
+        new THREE.MeshBasicMaterial({ map: plaqueText })
+      );
+      plaqueMesh.position.set(0, 2.85, pz + (pIdx === 0 ? -0.07 : 0.07));
+      if (pIdx === 0) plaqueMesh.rotation.y = Math.PI;
+      gateGroup.add(plaqueMesh);
+    });
+
+    // 6. Roundabout Road Arrows & Directional Ring (環形標線)
+    const arrowMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    for (let ang = 0; ang < Math.PI * 2; ang += Math.PI / 2) {
+      const arGeo = new THREE.PlaneGeometry(0.7, 2.2);
+      arGeo.rotateX(-Math.PI / 2);
+      const ar = new THREE.Mesh(arGeo, arrowMat);
+      ar.position.set(Math.cos(ang) * 9.2, 0.025, Math.sin(ang) * 9.2);
+      ar.rotation.y = -ang + Math.PI / 2;
+      gateGroup.add(ar);
+    }
+
+    this.scene.add(gateGroup);
+
+    // Colliders for the fortress abutments (Tunnel between X = -1.6 and 1.6 is drivable!)
+    this.colliders.push({
+      minX: -4.6, maxX: -1.6,
+      minZ: -233.2, maxZ: -226.8,
+      type: 'wall'
+    });
+    this.colliders.push({
+      minX: 1.6, maxX: 4.6,
+      minZ: -233.2, maxZ: -226.8,
+      type: 'wall'
+    });
+  }
+
   createBuildings() {
     const signs = [
       { text: '五十嵐', sub: '珍珠奶茶專賣' },
-      { text: '永和豆漿', sub: '宵夜早餐' },
+      { text: '永和豆漿', sub: '宵夜早餐大冰奶' },
       { text: '阿美鹽酥雞', sub: '蒜味九層塔' },
       { text: '黑糖珍珠', sub: '手工手炒黑糖' },
       { text: '大眾機車行', sub: '換機油傳動保養' },
       { text: '檳榔西施', sub: '雙子星包葉仔' },
-      { text: '夾娃娃世界', sub: '保夾出貨' },
+      { text: '夾娃娃世界', sub: '保夾出貨保證' },
       { text: '正忠排骨飯', sub: '傳統美味便當' },
       { text: '文青咖啡', sub: '手沖單品咖啡' },
       { text: '東區滷味', sub: '特製中藥滷汁' },
-      { text: '全家便當店', sub: '冷氣開放' },
-      { text: '宮廟祈福', sub: '香火鼎盛' }
+      { text: '全家便當店', sub: '冷氣開放座位區' },
+      { text: '宮廟祈福', sub: '香火鼎盛保平安' },
+      { text: '鼎泰豐小籠包', sub: '黃金十八摺' },
+      { text: '鬍鬚張魯肉飯', sub: '道地台灣小吃' },
+      { text: '台灣中油', sub: '95無鉛加滿' },
+      { text: '西門刺青', sub: '傳統日式浮世繪' }
     ];
 
     let signIdx = 0;
 
-    // 8 Island Blocks & Perimeter Buildings
+    // 4 Urban Blocks along Z (between cross streets: -230, -115, 0, 115, 230)
     const blockRanges = [
-      { minZ: -168, maxZ: -98, stepZ: 17 },
-      { minZ: -82, maxZ: -10, stepZ: 17 },
-      { minZ: 10, maxZ: 82, stepZ: 17 },
-      { minZ: 98, maxZ: 168, stepZ: 17 }
+      { minZ: -218, maxZ: -128, stepZ: 18 },
+      { minZ: -102, maxZ: -12, stepZ: 18 },
+      { minZ: 12, maxZ: 102, stepZ: 18 },
+      { minZ: 128, maxZ: 218, stepZ: 18 }
     ];
 
     blockRanges.forEach(b => {
       for (let z = b.minZ + 8; z <= b.maxZ - 6; z += b.stepZ) {
-        // 1. West Island Shophouse facing Main Avenue (X = -18)
+        // 1. Central West Shophouses facing Main Avenue (X = -18)
         const signW = signs[signIdx % signs.length]; signIdx++;
-        const hW = 14 + Math.random() * 8;
-        const bldgW = this.factory.createTaiwanBuilding(16, hW, 15, signW.text, signW.sub);
+        const bldgW = this.factory.createTaiwanBuilding(15, 14 + Math.random() * 8, 15, signW.text, signW.sub);
         bldgW.position.set(-18, 0, z);
         bldgW.rotation.y = Math.PI / 2;
         this.scene.add(bldgW);
 
-        // 2. East Island Shophouse facing Main Avenue (X = 18)
+        // 2. Central East Shophouses facing Main Avenue (X = 18)
         const signE = signs[signIdx % signs.length]; signIdx++;
-        const hE = 14 + Math.random() * 8;
-        const bldgE = this.factory.createTaiwanBuilding(16, hE, 15, signE.text, signE.sub);
+        const bldgE = this.factory.createTaiwanBuilding(15, 14 + Math.random() * 8, 15, signE.text, signE.sub);
         bldgE.position.set(18, 0, z);
         bldgE.rotation.y = -Math.PI / 2;
         this.scene.add(bldgE);
 
-        // 3. West Outer Perimeter Buildings facing West Alley (X = -44)
+        // 3. Mid West Shophouses facing West Alley & Avenue (X = -48)
         const signOutW = signs[signIdx % signs.length]; signIdx++;
         const bldgOutW = this.factory.createTaiwanBuilding(14, 12 + Math.random() * 6, 15, signOutW.text, signOutW.sub);
-        bldgOutW.position.set(-44, 0, z);
+        bldgOutW.position.set(-48, 0, z);
         bldgOutW.rotation.y = Math.PI / 2;
         this.scene.add(bldgOutW);
 
-        // 4. East Outer Perimeter Buildings facing East Alley (X = 44)
+        // 4. Mid East Shophouses facing East Alley & Avenue (X = 48)
         const signOutE = signs[signIdx % signs.length]; signIdx++;
         const bldgOutE = this.factory.createTaiwanBuilding(14, 12 + Math.random() * 6, 15, signOutE.text, signOutE.sub);
-        bldgOutE.position.set(44, 0, z);
+        bldgOutE.position.set(48, 0, z);
         bldgOutE.rotation.y = -Math.PI / 2;
         this.scene.add(bldgOutE);
+
+        // 5. Far West Commercial Buildings (between West Ave and Waterfront Ave, X = -95)
+        const signFarW = signs[signIdx % signs.length]; signIdx++;
+        const bldgFarW = this.factory.createTaiwanBuilding(20, 16 + Math.random() * 8, 15, signFarW.text, signFarW.sub);
+        bldgFarW.position.set(-95, 0, z);
+        bldgFarW.rotation.y = Math.PI / 2;
+        this.scene.add(bldgFarW);
+
+        // 6. Far East Commercial Buildings (between East Ave and East Ring, X = 95)
+        const signFarE = signs[signIdx % signs.length]; signIdx++;
+        const bldgFarE = this.factory.createTaiwanBuilding(20, 16 + Math.random() * 8, 15, signFarE.text, signFarE.sub);
+        bldgFarE.position.set(95, 0, z);
+        bldgFarE.rotation.y = -Math.PI / 2;
+        this.scene.add(bldgFarE);
       }
 
-      // Island Block Solid Colliders
-      this.colliders.push({
-        minX: -27.8, maxX: -9.8,
-        minZ: b.minZ, maxZ: b.maxZ,
-        type: 'wall'
-      });
-      this.colliders.push({
-        minX: 9.8, maxX: 27.8,
-        minZ: b.minZ, maxZ: b.maxZ,
-        type: 'wall'
-      });
+      // Solid Colliders for the 6 urban blocks in this Z slice
+      // Inner West Block (between Main Ave and West Alley)
+      this.colliders.push({ minX: -26.0, maxX: -10.2, minZ: b.minZ, maxZ: b.maxZ, type: 'wall' });
+      // Inner East Block (between Main Ave and East Alley)
+      this.colliders.push({ minX: 10.2, maxX: 26.0, minZ: b.minZ, maxZ: b.maxZ, type: 'wall' });
+
+      // Mid West Block (between West Alley and West Avenue)
+      this.colliders.push({ minX: -55.0, maxX: -38.5, minZ: b.minZ, maxZ: b.maxZ, type: 'wall' });
+      // Mid East Block (between East Alley and East Avenue)
+      this.colliders.push({ minX: 38.5, maxX: 55.0, minZ: b.minZ, maxZ: b.maxZ, type: 'wall' });
+
+      // Far West Block (between West Avenue and Waterfront Avenue)
+      this.colliders.push({ minX: -115.0, maxX: -75.0, minZ: b.minZ, maxZ: b.maxZ, type: 'wall' });
+      // Far East Block (between East Avenue and East Ring Avenue)
+      this.colliders.push({ minX: 75.0, maxX: 115.0, minZ: b.minZ, maxZ: b.maxZ, type: 'wall' });
     });
-
-    // Outer shop blocks have cross-street openings connecting to the new ring.
-    for (const b of blockRanges) {
-      for (const side of [-1, 1]) {
-        this.colliders.push({ minX: side < 0 ? -52 : 35.8, maxX: side < 0 ? -35.8 : 52,
-          minZ: b.minZ, maxZ: b.maxZ, type: 'wall' });
-      }
-    }
   }
 
   createSidewalkClutter() {
@@ -567,15 +717,18 @@ export class CityGenerator {
     const pickupBeacon = this.createBeacon(this.bobaShopPos.x, this.bobaShopPos.z, 0x00e676);
     this.scene.add(pickupBeacon);
 
-    // 2. Customer Delivery Destinations (Crazy Taxi Style Drop-off Spots across multiple routes)
+    // 2. Customer Delivery Destinations (Crazy Taxi Style Drop-off Spots across multiple routes and districts)
     const dropCoords = [
-      { x: 4.5, z: -50, name: '林小姐 (永和豆漿隔壁3樓・主幹道)' },
-      { x: -32.0, z: -35, name: '文青咖啡廳店長 (西側防火巷老街)' },
-      { x: 32.0, z: 45, name: '夜市鹹酥雞張阿姨 (東側美食後巷)' },
-      { x: -4.5, z: 20, name: '陳先生 (台電變電箱後方老宅)' },
-      { x: -32.0, z: 120, name: '動漫社學弟 (西巷住宅公寓5樓)' },
-      { x: 4.8, z: 80, name: '科技新貴 (開雙黃燈阿法車主)' },
-      { x: -4.2, z: 150, name: '大眾機車行 老闆阿明' }
+      { x: 0, z: -205, name: '北門廣場前 文創手作咖啡館' },
+      { x: -65.0, z: -80, name: '延平北路 百年茶行王老闆' },
+      { x: 65.0, z: -60, name: '重慶南路 兆豐金融總部林襄理' },
+      { x: -125.0, z: 10, name: '淡水河堤夕照水岸 街頭藝人' },
+      { x: 32.0, z: 60, name: '夜市深處 炭烤香腸攤張阿姨' },
+      { x: 125.0, z: 120, name: '東環夜市 觀光美食街舞台' },
+      { x: -65.0, z: 180, name: '西門萬年商業大樓 潮牌店長' },
+      { x: 65.0, z: 215, name: '南環水岸花園 豪宅陳主委' },
+      { x: 0.0, z: 80, name: '中正大道 科技新貴 (開雙黃燈阿法車主)' },
+      { x: -32.0, z: -35, name: '文青老巷 手沖咖啡店長' }
     ];
 
     dropCoords.forEach((coord, idx) => {

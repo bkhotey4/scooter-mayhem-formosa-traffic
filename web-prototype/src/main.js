@@ -1032,6 +1032,68 @@ class GameApp {
     } else {
       this.ui.bobaAlert.classList.remove('danger');
     }
+
+    // 7. Dynamic Taiwanese Blue Road Sign (如台北GTA道路路牌)
+    const road = this.getCurrentRoadName(this.controller.position.x, this.controller.position.z);
+    const roadNameEl = document.getElementById('road-sign-name');
+    const roadSubEl = document.getElementById('road-sign-sub');
+    if (roadNameEl && roadNameEl.innerText !== road.name) {
+      roadNameEl.innerText = road.name;
+      if (roadSubEl) roadSubEl.innerText = road.sub;
+    }
+  }
+
+  getCurrentRoadName(x, z) {
+    // 1. Check near North Gate Roundabout (Z = -230)
+    if (Math.abs(z - (-230)) < 26) {
+      if (Math.hypot(x, z - (-230)) < 18) {
+        return { name: '北門圓環', sub: 'Beimen Roundabout' };
+      }
+      return { name: '北門圓環大道', sub: 'North Ring Blvd.' };
+    }
+
+    // 2. East-West cross intersections / boulevards
+    const isCrossZ = (cz) => Math.abs(z - cz) < 10;
+    
+    if (isCrossZ(-115)) {
+      if (x <= -100) return { name: '南京西路 / 環河路口', sub: 'Nanjing & Huanhe Jct.' };
+      if (x >= 100) return { name: '南京西路 / 東環路口', sub: 'Nanjing & East Ring Jct.' };
+      return { name: '南京西路', sub: 'Nanjing W. Rd.' };
+    }
+    if (isCrossZ(0)) {
+      if (x <= -100) return { name: '中正大道 / 環河路口', sub: 'Zhongzheng & Huanhe Jct.' };
+      if (x >= 100) return { name: '中正大道 / 東環路口', sub: 'Zhongzheng & East Ring Jct.' };
+      return { name: '中正大道', sub: 'Zhongzheng Blvd.' };
+    }
+    if (isCrossZ(115)) {
+      if (x <= -100) return { name: '和平西路 / 環河路口', sub: 'Heping & Huanhe Jct.' };
+      if (x >= 100) return { name: '和平西路 / 東環路口', sub: 'Heping & East Ring Jct.' };
+      return { name: '和平西路', sub: 'Heping W. Rd.' };
+    }
+    if (Math.abs(z - 230) < 18) {
+      return { name: '南環水岸大道', sub: 'South Ring Blvd.' };
+    }
+
+    // 3. North-South avenues / alleys
+    if (x <= -100) {
+      return { name: '淡水河堤觀景道', sub: 'Tamsui Riverside Promenade' };
+    }
+    if (x <= -48) {
+      return { name: '延平北路老街', sub: 'Yanping N. Rd.' };
+    }
+    if (x <= -16) {
+      return { name: '文青老街防火巷', sub: 'Historic Culture Alley' };
+    }
+    if (x >= 100) {
+      return { name: '東環夜市大道', sub: 'East Ring Night Market Blvd.' };
+    }
+    if (x >= 48) {
+      return { name: '重慶南路金融街', sub: 'Chongqing S. Rd.' };
+    }
+    if (x >= 16) {
+      return { name: '夜市美食宵夜巷', sub: 'Food Market Alley' };
+    }
+    return { name: '忠孝大道', sub: 'Zhongxiao Blvd.' };
   }
 
   showFineToast(msg) {

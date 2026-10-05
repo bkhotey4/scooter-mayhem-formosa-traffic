@@ -350,6 +350,57 @@ body {
   transform: translateY(0);
 }
 
+/* Authentic Taiwanese Highway Blue Road Sign (台灣公路經典藍底白框路牌) */
+.road-sign-plate {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(180deg, #005bb5 0%, #004085 100%);
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  user-select: none;
+  margin-bottom: 6px;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.road-sign-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.road-sign-symbol {
+  font-size: 18px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+}
+
+.road-sign-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.15;
+}
+
+.road-sign-name {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.road-sign-sub {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #dbeafe;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
 .wheelie-badge, .nitro-badge, .wanted-badge {
   font-size: 13px;
   font-weight: 900;

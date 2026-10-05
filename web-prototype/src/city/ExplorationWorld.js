@@ -1,60 +1,90 @@
 import * as THREE from 'three';
 import { box, paint, sign, createTree, createFoodStall } from '../models/StreetArt.js';
 
-export const WORLD_BOUNDS = { minX: -78, maxX: 78, minZ: -208, maxZ: 208 };
+export const WORLD_BOUNDS = { minX: -155, maxX: 155, minZ: -275, maxZ: 275 };
 export const ROADS = [
-  ...[-64, -32, 0, 32, 64].map(x => ({ x1: x, z1: -190, x2: x, z2: 190, width: x === 0 ? 13 : 9 })),
-  ...[-190, -90, 0, 90, 190].map(z => ({ x1: -64, z1: z, x2: 64, z2: z, width: 10 }))
+  // 5 North-South Avenues + 2 Alleys
+  { x1: -125, z1: -230, x2: -125, z2: 230, width: 12 }, // 環河北路
+  { x1: -65, z1: -230, x2: -65, z2: 230, width: 12 },  // 延平北路 / 西門老街
+  { x1: -32, z1: -230, x2: -32, z2: 230, width: 8 },   // 西側文青老巷
+  { x1: 0, z1: -230, x2: 0, z2: 230, width: 14 },      // 忠孝大道中央幹道
+  { x1: 32, z1: -230, x2: 32, z2: 230, width: 8 },    // 東側美食後巷
+  { x1: 65, z1: -230, x2: 65, z2: 230, width: 12 },   // 重慶南路金融街
+  { x1: 125, z1: -230, x2: 125, z2: 230, width: 12 },  // 東環夜市大道
+
+  // 5 East-West Cross Boulevards (Connecting all vertical avenues into complete loops!)
+  { x1: -125, z1: -230, x2: 125, z2: -230, width: 14 }, // 北門圓環大道 (北環)
+  { x1: -125, z1: -115, x2: 125, z2: -115, width: 12 }, // 南京西路
+  { x1: -125, z1: 0, x2: 125, z2: 0, width: 14 },       // 中正大道十字路口
+  { x1: -125, z1: 115, x2: 125, z2: 115, width: 12 },   // 和平西路
+  { x1: -125, z1: 230, x2: 125, z2: 230, width: 14 }    // 南環水岸大道 (南環)
 ];
+
 export const LANDMARKS = [
-  { id: 'river', name: '榕樹河堤', x: -64, z: -125 },
-  { id: 'sunset', name: '夕照觀景道', x: -64, z: 125 },
-  { id: 'homes', name: '花磚住宅街', x: 64, z: -125 },
-  { id: 'market', name: '燈籠夜市支路', x: 64, z: 45 },
-  { id: 'north', name: '北門小公園', x: 0, z: -190 },
-  { id: 'south', name: '南環休息站', x: 32, z: 190 }
+  { id: 'river', name: '榕樹河堤水岸', x: -125, z: -115 },
+  { id: 'sunset', name: '夕照觀景道', x: -125, z: 115 },
+  { id: 'homes', name: '重慶金融書街', x: 65, z: -115 },
+  { id: 'market', name: '東環燈籠夜市', x: 125, z: 115 },
+  { id: 'north', name: '北門古蹟圓環', x: 0, z: -230 },
+  { id: 'south', name: '南環水岸大道', x: 65, z: 230 }
 ];
 
 export function expandWorld(scene, factory, colliders) {
-  box(scene, 180, 0.1, 440, paint(0x849579), 0, -0.12, 0);
+  // Broad green lawn / foundation ground
+  box(scene, 330, 0.1, 570, paint(0x849579), 0, -0.12, 0);
+
+  // Render secondary asphalt roads and lane markings
   for (const r of ROADS) {
-    // Existing central streets retain their original surface and markings.
     const vertical = r.x1 === r.x2;
     const length = Math.hypot(r.x2 - r.x1, r.z2 - r.z1);
     box(scene, vertical ? r.width : length + r.width, 0.025, vertical ? length + r.width : r.width,
       factory.materials.asphalt, (r.x1 + r.x2) / 2, -0.015, (r.z1 + r.z2) / 2);
-    if (vertical && Math.abs(r.x1) === 64) {
-      for (let z = -181; z <= 181; z += 8) {
-        if ([-90, 0, 90].some(c => Math.abs(c - z) < 8)) continue;
-        box(scene, 0.12, 0.015, 3, paint(0xeed896), r.x1, 0.02, z);
+
+    // Yellow dashed road center lines along outer avenues
+    if (vertical && Math.abs(r.x1) >= 65) {
+      for (let z = -220; z <= 220; z += 8) {
+        if ([-230, -115, 0, 115, 230].some(c => Math.abs(c - z) < 10)) continue;
+        box(scene, 0.15, 0.015, 3.5, paint(0xffeb3b), r.x1, 0.02, z);
       }
     }
-    if (!vertical && Math.abs(r.z1) === 190) {
-      for (let x = -58; x < 60; x += 8) box(scene, 3, 0.015, 0.12, paint(0xeed896), x, 0.02, r.z1);
+    if (!vertical && Math.abs(r.z1) >= 115) {
+      for (let x = -118; x < 120; x += 8) {
+        if ([-125, -65, 0, 65, 125].some(c => Math.abs(c - x) < 10)) continue;
+        box(scene, 3.5, 0.015, 0.15, paint(0xffeb3b), x, 0.02, r.z1);
+      }
     }
   }
-  // River is separated from the rideable embankment by a continuous railing.
-  box(scene, 16, 0.06, 420, paint(0x427b88, 0.23), -86, -0.03, 0);
-  box(scene, 0.35, 0.9, 416, paint(0xd3cab1), -76, 0.45, 0);
-  colliders.push({ minX: -76.3, maxX: -75.7, minZ: -208, maxZ: 208, type: 'wall' });
-  for (let z = -170; z <= 170; z += 24) {
-    if ([-90, 0, 90].some(c => Math.abs(c - z) < 13)) continue;
-    const tree = createTree(); tree.position.set(-72, 0, z); scene.add(tree);
-    colliders.push({ minX: -72.7, maxX: -71.3, minZ: z - 0.7, maxZ: z + 0.7, type: 'box' });
-    if (z < -10) {
-      const home = factory.createTaiwanBuilding(10, 7 + (z + 170) % 3, 8, '花磚小宅', '慢行・生活街');
-      home.position.set(76, 0, z); home.rotation.y = -Math.PI / 2; scene.add(home);
-      colliders.push({ minX: 71, maxX: 82, minZ: z - 5, maxZ: z + 5, type: 'wall' });
+
+  // Western River & Promenade Railing along X = -145
+  box(scene, 24, 0.06, 540, paint(0x427b88, 0.23), -146, -0.03, 0);
+  box(scene, 0.35, 0.9, 530, paint(0xd3cab1), -135, 0.45, 0);
+  colliders.push({ minX: -135.3, maxX: -134.7, minZ: -275, maxZ: 275, type: 'wall' });
+
+  // Trees and lights along riverside avenue
+  for (let z = -210; z <= 210; z += 28) {
+    if ([-230, -115, 0, 115, 230].some(c => Math.abs(c - z) < 14)) continue;
+    const tree = createTree(); tree.position.set(-131, 0, z); scene.add(tree);
+    colliders.push({ minX: -131.7, maxX: -130.3, minZ: z - 0.7, maxZ: z + 0.7, type: 'box' });
+  }
+
+  // Eastern night market shophouses and food stalls
+  for (let z = -210; z <= 210; z += 26) {
+    if ([-230, -115, 0, 115, 230].some(c => Math.abs(c - z) < 14)) continue;
+    if (z < 0) {
+      const home = factory.createTaiwanBuilding(12, 10 + (Math.abs(z) % 4) * 2, 12, '金融商辦', '重慶南路');
+      home.position.set(137, 0, z); home.rotation.y = -Math.PI / 2; scene.add(home);
+      colliders.push({ minX: 131, maxX: 143, minZ: z - 6, maxZ: z + 6, type: 'wall' });
     } else {
-      const stall = createFoodStall(factory, ['手工愛玉', '烤玉米', '夜市茶舖'][(z + 170) / 24 % 3 | 0], 0x9c5542);
-      stall.position.set(72, 0, z); stall.rotation.y = -Math.PI / 2; scene.add(stall);
-      colliders.push({ minX: 70.5, maxX: 73.5, minZ: z - 2, maxZ: z + 2, type: 'box' });
+      const stall = createFoodStall(factory, ['大腸包小腸', '排骨酥麵', '碳烤雞排', '手工愛玉'][(z / 26 | 0) % 4], 0x9c5542);
+      stall.position.set(133, 0, z); stall.rotation.y = -Math.PI / 2; scene.add(stall);
+      colliders.push({ minX: 131.5, maxX: 134.5, minZ: z - 2, maxZ: z + 2, type: 'box' });
     }
   }
-  // Pocket park and rest-stop furniture stay clear of the ring road.
-  for (const z of [-201, 201]) {
-    box(scene, 100, 0.12, 9, paint(0x98aa79), 0, 0, z);
-    for (const x of [-40, -20, 0, 20, 40]) {
+
+  // North & South Perimeter Pocket Parks
+  for (const z of [-250, 250]) {
+    box(scene, 220, 0.12, 9, paint(0x98aa79), 0, 0, z);
+    for (const x of [-90, -50, -10, 30, 70]) {
       const tree = createTree(); tree.position.set(x, 0, z); scene.add(tree);
       box(scene, 2.4, 0.16, 0.7, paint(0x86644c), x + 4, 0.6, z);
       box(scene, 2.4, 0.6, 0.12, paint(0x86644c), x + 4, 0.95, z + 0.3);
@@ -62,22 +92,26 @@ export function expandWorld(scene, factory, colliders) {
       colliders.push({ minX: x + 2.8, maxX: x + 5.2, minZ: z - 0.4, maxZ: z + 0.4, type: 'box' });
     }
   }
+
+  // 6 Exploration Landmark Pillars
   for (const p of LANDMARKS) {
     const marker = new THREE.Group();
-    box(marker, 0.16, 3.6, 0.16, paint(0x3f5d54), 0, 1.8, 0);
-    const label = sign(marker, factory, p.name, '探索地標・沿路集章', 4.2, 1.1, 0, 3.4, 0);
+    box(marker, 0.2, 3.8, 0.2, paint(0x3f5d54), 0, 1.9, 0);
+    const label = sign(marker, factory, p.name, '探索地標・集章打卡', 4.5, 1.2, 0, 3.5, 0);
     const reverseLabel = label.clone(); reverseLabel.position.z = -0.081; reverseLabel.rotation.y = Math.PI; marker.add(reverseLabel);
-    const ring = Math.abs(p.z) === 190;
-    const x = ring ? p.x : p.x + (p.x < 0 ? -6 : 6);
-    const z = ring ? p.z + Math.sign(p.z) * 7 : p.z;
-    marker.position.set(x, 0, z); scene.add(marker);
-    colliders.push({ minX: x - 0.2, maxX: x + 0.2, minZ: z - 0.2, maxZ: z + 0.2, type: 'box' });
+    marker.position.set(p.x, 0, p.z); scene.add(marker);
+    colliders.push({ minX: p.x - 0.3, maxX: p.x + 0.3, minZ: p.z - 0.3, maxZ: p.z + 0.3, type: 'box' });
   }
-  for (const z of [-207, 207]) {
-    box(scene, 156, 0.8, 0.5, paint(0xc4bba2), 0, 0.4, z);
-    colliders.push({ minX: -78, maxX: 78, minZ: z - 0.3, maxZ: z + 0.3, type: 'wall' });
+
+  // North & South Boundary Walls
+  for (const z of [-274, 274]) {
+    box(scene, 312, 0.8, 0.5, paint(0xc4bba2), 0, 0.4, z);
+    colliders.push({ minX: -155, maxX: 155, minZ: z - 0.3, maxZ: z + 0.3, type: 'wall' });
   }
-  box(scene, 0.5, 0.8, 416, paint(0xc4bba2), 78, 0.4, 0);
+
+  // East Boundary Wall
+  box(scene, 0.5, 0.8, 548, paint(0xc4bba2), 154, 0.4, 0);
+  colliders.push({ minX: 153.7, maxX: 154.3, minZ: -275, maxZ: 275, type: 'wall' });
 }
 
 export class ExplorationProgress {

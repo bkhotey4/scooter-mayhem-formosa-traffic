@@ -58,9 +58,11 @@ export class TrafficSystem {
     this.railwayAwarded = false;
     this.railwayStopYieldAwarded = false;
     this.intersectionCheckers = [
-      { z: -90, timer: 0 },
+      { z: -230, timer: 0 },
+      { z: -115, timer: 0 },
       { z: 0, timer: 0 },
-      { z: 90, timer: 0 }
+      { z: 115, timer: 0 },
+      { z: 230, timer: 0 }
     ];
 
     // Uncle Ming's Tire Pitstop & Sobriety Checkpoint

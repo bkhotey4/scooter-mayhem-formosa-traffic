@@ -55,10 +55,10 @@ export class WorldMap {
       const li = document.createElement('li'); li.textContent = `${visited.has(p.id) ? '●' : '○'} ${p.name}`; return li;
     }));
     const ctx = this.canvas.getContext('2d');
-    const scale = 1.55;
+    const scale = 1.18;
     const point = (x, z) => [320 + x * scale, 380 + z * scale];
     ctx.fillStyle = '#182f31'; ctx.fillRect(0, 0, 640, 760);
-    ctx.fillStyle = '#2b5c69'; ctx.fillRect(169, 50, 25, 660);
+    ctx.fillStyle = '#2b5c69'; ctx.fillRect(320 - 146 * scale - 12 * scale, 380 - 270 * scale, 24 * scale, 540 * scale);
     ctx.strokeStyle = '#658078'; ctx.lineCap = 'round';
     for (const r of cityData.roads) {
       ctx.lineWidth = r.width * scale;
