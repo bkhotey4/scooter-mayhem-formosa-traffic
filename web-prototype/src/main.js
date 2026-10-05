@@ -100,6 +100,7 @@ class GameApp {
       btnSummaryQuit: document.getElementById('btn-summary-quit'),
       btnGameoverQuit: document.getElementById('btn-gameover-quit'),
       btnStartQuit: document.getElementById('btn-start-quit'),
+      btnStartQuit2: document.getElementById('btn-start-quit-2'),
       visorOverlay: document.getElementById('visor-overlay'),
       speedlinesOverlay: document.getElementById('speedlines-overlay'),
       wiperArm: document.getElementById('wiper-arm'),
@@ -406,6 +407,46 @@ class GameApp {
     this.ui.btnSummaryQuit?.addEventListener('click', () => this.returnToMainMenu());
     this.ui.btnGameoverQuit?.addEventListener('click', () => this.returnToMainMenu());
     this.ui.btnStartQuit?.addEventListener('click', () => this.quitGame());
+    this.ui.btnStartQuit2?.addEventListener('click', () => this.quitGame());
+
+    // 2-Step Split Screen Navigation for Start Screen
+    const startPage1 = document.getElementById('start-page-1');
+    const startPage2 = document.getElementById('start-page-2');
+    const tabStartStep1 = document.getElementById('tab-start-step1');
+    const tabStartStep2 = document.getElementById('tab-start-step2');
+    const summaryPill = document.getElementById('page2-config-summary');
+
+    this.updateStartPageSummary = () => {
+      const activeCounty = document.querySelector('.county-btn.active')?.textContent.replace(/\s+/g, ' ').trim() || '新北 / 台北';
+      const activeVehicle = document.querySelector('.starter-card.active .starter-card-name')?.textContent.trim() || '勁戰四代 (125cc)';
+      if (summaryPill) {
+        summaryPill.textContent = `📍 預定出發：${activeCounty} ｜ 🛵 ${activeVehicle}`;
+      }
+    };
+
+    this.showStartStep = (step) => {
+      if (step === 1) {
+        startPage1?.classList.remove('hidden');
+        startPage2?.classList.add('hidden');
+        tabStartStep1?.classList.add('active');
+        tabStartStep1?.setAttribute('aria-selected', 'true');
+        tabStartStep2?.classList.remove('active');
+        tabStartStep2?.setAttribute('aria-selected', 'false');
+      } else {
+        this.updateStartPageSummary();
+        startPage1?.classList.add('hidden');
+        startPage2?.classList.remove('hidden');
+        tabStartStep1?.classList.remove('active');
+        tabStartStep1?.setAttribute('aria-selected', 'false');
+        tabStartStep2?.classList.add('active');
+        tabStartStep2?.setAttribute('aria-selected', 'true');
+      }
+    };
+
+    document.getElementById('btn-goto-page2')?.addEventListener('click', () => this.showStartStep(2));
+    document.getElementById('btn-goto-page1')?.addEventListener('click', () => this.showStartStep(1));
+    tabStartStep1?.addEventListener('click', () => this.showStartStep(1));
+    tabStartStep2?.addEventListener('click', () => this.showStartStep(2));
     window.addEventListener('blur', () => { if (this.running) this.setPaused(true); });
     document.addEventListener('visibilitychange', () => { if (document.hidden && this.running) this.setPaused(true); });
     // 1. Mobile & Touch Screen Auto-Detection
@@ -655,6 +696,7 @@ class GameApp {
     if (this.cityData?.bobaShop) {
       this.controller.reset(this.cityData.bobaShop.x, this.cityData.bobaShop.z, 0);
     }
+    this.showStartStep?.(1);
     this.updateHUD();
   }
 

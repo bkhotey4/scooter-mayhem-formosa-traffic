@@ -11,12 +11,15 @@ async function testSteering() {
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 720 });
-  await page.goto('http://localhost:3001/', { waitUntil: 'networkidle0' });
+  await page.goto('http://localhost:3001/', { waitUntil: 'domcontentloaded' });
+  await new Promise(r => setTimeout(r, 1200));
 
   await page.waitForFunction(() => window.app && window.app.controller);
   console.log('Game initialized.');
 
-  // Click start game button to leave title screen
+  // Click next step button then start game button
+  await page.click('#btn-goto-page2');
+  await new Promise(r => setTimeout(r, 200));
   await page.click('#btn-start-game');
   await new Promise(r => setTimeout(r, 500));
 

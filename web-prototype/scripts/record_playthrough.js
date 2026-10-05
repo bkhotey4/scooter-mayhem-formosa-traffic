@@ -38,7 +38,9 @@ async function recordFullCampaign() {
   await page.click('[data-vehicle="cygnus"]');
   await new Promise(r => setTimeout(r, 400));
 
-  // 2. Start game and activate Web Audio
+  // 2. Step 2 & Start game and activate Web Audio
+  await page.click('#btn-goto-page2');
+  await new Promise(r => setTimeout(r, 300));
   console.log('🏁 點擊「發動引擎！開始狂飆！」啟動引擎與音樂...');
   await page.click('#btn-start-game');
   await new Promise(r => setTimeout(r, 600));

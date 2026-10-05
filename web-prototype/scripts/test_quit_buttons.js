@@ -11,11 +11,16 @@ async function testQuitButtons() {
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 720 });
-  await page.goto('http://localhost:3001/', { waitUntil: 'networkidle0' });
+  await page.goto('http://localhost:3001/', { waitUntil: 'domcontentloaded' });
+  await new Promise(r => setTimeout(r, 1200));
 
   // 1. Check start screen has exit button
   const startQuitExists = await page.$('#btn-start-quit');
   console.log('1. Start quit button exists:', !!startQuitExists);
+
+  // Navigate to Step 2 (Mode & Launch)
+  await page.click('#btn-goto-page2');
+  await new Promise(r => setTimeout(r, 200));
 
   // 2. Start game
   await page.click('#btn-start-game');
